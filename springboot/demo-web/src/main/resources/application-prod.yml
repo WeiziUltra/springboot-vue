@@ -1,0 +1,27 @@
+#############################################通用配置#############################################
+server:
+  port: 8080
+spring:
+  profiles:
+    include: common-prod
+mybatis:
+  #设置MyBatis全局变量
+  configuration-properties:
+    # 文件存放域名前缀
+    filePathPrefix: http://127.0.0.1:8080
+#禁用swagger,
+knife4j:
+  production: true
+
+#自定义全局变量*******注意:  :后面要有空格
+global:
+  #日志文件存放路径
+  log-path: /home/project/muteki/springboot/logs
+  #图片存放路径--本地项目运行的target目录
+  base-file-path: /home/project/muteki/springboot/status
+  #允许跨域地址(访问的浏览器的Origin,不设置默认*)---多个地址用,(英文逗号)分隔开---可精确到端口号
+  cors-filter-origins: '*'
+  #是否將异常详情展示给前端
+  response-show-runtime-exception: true
+  #是否开启拦截 `AuthorizationInterceptor` 生产环境下一定要开启
+  open-interceptor: true

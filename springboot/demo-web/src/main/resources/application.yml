@@ -1,0 +1,45 @@
+#############################################通用配置#############################################
+spring:
+  profiles:
+    #启动什么配置
+    active: dev
+    include: common
+  servlet:
+    multipart:
+      #设置单个文件上传最大限制
+      max-file-size: 5MB
+      #设置多个文件上传最大限制
+      max-request-size: 100MB
+  jackson:
+    #配置时间格式
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  resources:
+    static-locations: classpath:static/,file:static/
+mybatis:
+  #设置MyBatis配置
+  configuration:
+    #返回类型为Map时，null也返回
+    call-setters-on-nulls: true
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+  #指定sql映射文件位置
+  mapper-locations: classpath*:mybatis/mapper/**/*Mapper.xml
+  #所在包配置别名
+  type-aliases-package: com.weiziplus.common.models
+#pagehelper分页插件配置
+pagehelper:
+  helper-dialect: mysql
+  #为了使用输入页数为负或者超出最大页时候使页数为最小或最大值
+  reasonable: false
+#日志打印
+logging:
+  config: classpath:config/logback-spring.xml
+
+#自定义全局变量*******注意:  :后面要有空格
+global:
+  token:
+    #token过期时间,单位秒
+    expire-time:
+      #系统用户
+      web: 86400
