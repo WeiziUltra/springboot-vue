@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiziplus.common.core.datadictionary.DataDictionaryIpManagerMapper">
+    <select id="getIpListByTerminal" resultType="DataDictionaryValue">
+        SELECT *
+        FROM `data_dictionary_value`
+        <where>
+            <if test="null != terminal and '' != terminal">
+                <if test="'PC' == terminal">
+                    `dictionary_code` IN (
+                    'pcIpFilterWhiteList','pcIpFilterBlackList','pcIpFilterAbnormalList'
+                    )
+                </if>
+                <if test="'WEB' == terminal">
+                    `dictionary_code` IN (
+                    'webIpFilterWhiteList','webIpFilterBlackList','webIpFilterAbnormalList'
+                    )
+                </if>
+            </if>
+            <if test="null != search and '' != search">
+                AND (
+                POSITION(#{search} IN `value`)
+                OR POSITION(#{search} IN `name`)
+                OR POSITION(#{search} IN `remark`)
+                )
+            </if>
+        </where>
+    </select>
+</mapper>
