@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiziplus.pc.core.system.mapper.SysUserMapper">
+    <select id="getListVo" resultType="com.weiziplus.pc.core.system.vo.SysUserVo">
+        SELECT su.*, CONCAT('${filePathPrefix}', su.icon) `iconAllPath`, GROUP_CONCAT(sr.name) `roleList`
+        FROM `sys_user` su
+        LEFT JOIN `sys_user_role` sur ON su.id = sur.user_id
+        LEFT JOIN `sys_role` sr ON sur.role_id = sr.id
+        <where>
+            su.id > 1
+            <if test="null != username and '' != username">
+                AND POSITION(#{username} IN su.username)
+            </if>
+            <if test="null != roleId">
+                AND sr.id = #{roleId}
+            </if>
+            <if test="null != status">
+                AND su.status = #{status}
+            </if>
+            <if test="null != lastActiveTime">
+                AND su.last_active_time LIKE CONCAT(#{lastActiveTime},'%')
+            </if>
+            <if test="null != createTime">
+                AND su.create_time LIKE CONCAT(#{createTime},'%')
+            </if>
+        </where>
+        GROUP BY su.id
+        ORDER BY su.status ASC,su.create_time ${createTimeSort},su.last_active_time ${lastActiveTimeSort}
+    </select>
+</mapper>

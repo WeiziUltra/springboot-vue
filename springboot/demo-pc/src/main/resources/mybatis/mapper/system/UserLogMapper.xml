@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiziplus.pc.core.system.mapper.UserMapper">
+    <select id="getListVo" resultType="com.weiziplus.pc.core.system.vo.UserLogVo">
+        SELECT tul.*, tu.username
+        FROM `t_user_log` tul
+        LEFT JOIN `t_user` tu ON tul.user_id = tu.id
+        <where>
+            <if test="null != username and '' != username">
+                POSITION(#{username} IN tu.username)
+            </if>
+            <if test="null != type">
+                AND tul.type = #{type}
+            </if>
+            <if test="null != description and '' != description">
+                AND POSITION(#{description} IN tul.description)
+            </if>
+            <if test="null != ipAddress and '' != ipAddress">
+                AND POSITION(#{ipAddress} IN tul.ip_address)
+            </if>
+            <if test="null != borderName and '' != borderName">
+                AND POSITION(#{borderName} IN tul.border_name)
+            </if>
+            <if test="null != osName and '' != osName">
+                AND POSITION(#{osName} IN tul.os_name)
+            </if>
+            <if test="null != startTime and '' != startTime">
+                AND tul.create_time <![CDATA[>]]> #{startTime}
+            </if>
+            <if test="null != endTime and '' != endTime">
+                AND tul.create_time <![CDATA[<=]]> #{endTime}
+            </if>
+        </where>
+        ORDER BY tul.create_time ${createTimeSort}
+    </select>
+</mapper>
