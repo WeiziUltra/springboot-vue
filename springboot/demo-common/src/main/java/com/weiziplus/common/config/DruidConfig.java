@@ -16,7 +16,7 @@ public class DruidConfig {
     @Value("${spring.datasource.druid.username:root}")
     private String username;
 
-    @Value("${spring.datasource.druid.password:nhkj}")
+    @Value("${spring.datasource.druid.password:weiziplus}")
     private String password;
 
     @Bean
