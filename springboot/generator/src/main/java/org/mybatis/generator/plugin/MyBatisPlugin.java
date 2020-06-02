@@ -29,7 +29,10 @@ public class MyBatisPlugin extends PluginAdapter {
     /**
      * 忽略的数据库表
      */
-    private final List<String> IGNORE_TABLE = Arrays.asList();
+    private final List<String> IGNORE_TABLE = Arrays.asList(
+            "sys_user", "sys_user_log", "sys_user_role", "sys_role", "sys_role_function",
+            "sys_function", "sys_error", "data_dictionary", "data_dictionary_value", "t_user_log"
+    );
 
     /**
      * 设置类的注释

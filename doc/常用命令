@@ -7,3 +7,4 @@
 * 查看定时任务:  crontab -l
 * 新建定时任务:  crontab -e
 * 每周日清空nohup.out文件:    0 0 * * 0  > /home/template/build/nohup.out
+* 停止某个端口的java项目  kill -9 $(ps -ef | grep java | grep 8080 | awk '{print $2}')
