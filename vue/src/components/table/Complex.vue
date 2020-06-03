@@ -19,31 +19,6 @@
                                            :disabled="option.disabled || false"></el-option>
                             </el-select>
                         </template>
-                        <template v-else-if="'radio' === item.type">
-                            <el-radio-group v-model="tableDataRequest.data[item.prop]"
-                                            :disabled="item.disabled || false">
-                                <el-radio v-for="option in item.options" :key="option.value"
-                                          :label="option.value" :disabled="option.disabled || false">
-                                    {{option.label}}
-                                </el-radio>
-                            </el-radio-group>
-                        </template>
-                        <template v-else-if="'textarea' === item.type">
-                            <el-input type="textarea" v-model="tableDataRequest.data[item.prop]"
-                                      :disabled="item.disabled || false"></el-input>
-                        </template>
-                        <template v-else-if="'checkbox' === item.type">
-                            <el-checkbox-group v-model="tableDataRequest.data[item.prop]"
-                                               :disabled="item.disabled || false">
-                                <el-checkbox v-for="option in options" :key="option.value"
-                                             :label="option.value" :disabled="option.disabled || false">{{option.label}}
-                                </el-checkbox>
-                            </el-checkbox-group>
-                        </template>
-                        <template v-else-if="'switch' === item.type">
-                            <el-switch v-model="tableDataRequest.data[item.prop]"
-                                       :disabled="item.disabled || false"></el-switch>
-                        </template>
                         <template v-else-if="'datePicker' === item.type">
                             <el-date-picker :type="item['dateType'] || 'date'" :placeholder="item.placeholder || '选择日期'"
                                             v-model="tableDataRequest.data[item.prop]"
