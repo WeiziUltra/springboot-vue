@@ -4,14 +4,14 @@
         <el-row v-for="(row,index) in rows" :key="row.label || index"
                 v-if="!row['hidden']">
             <el-col :span="colNum">
-                <div v-if="null != row.label && 7 < row.label.length">
+                <template v-if="null != row.label && 7 < row.label.length">
                     <el-tooltip class="item" effect="dark" :content="row.label" placement="top">
                         <div class="label">{{row.label}}</div>
                     </el-tooltip>
-                </div>
-                <div v-else>
+                </template>
+                <template v-else>
                     <div class="label">{{row.label || '标题'}}</div>
-                </div>
+                </template>
             </el-col>
             <el-col :span="24 - colNum">
                 <div class="content">

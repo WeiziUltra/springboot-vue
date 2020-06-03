@@ -6,7 +6,7 @@
             <div v-for="item in formOptions" :key="item.prop"
                  v-if="!item['hidden']">
                 <!--一行展示多个-->
-                <div v-if="null != item.items && 0 < item.items.length">
+                <template v-if="null != item.items && 0 < item.items.length">
                     <div style="display: flex;">
                         <template v-for="i in item.items">
                             <!--station表示仅用作占位-->
@@ -23,13 +23,13 @@
                             </template>
                         </template>
                     </div>
-                </div>
+                </template>
                 <!--一行展示一个-->
-                <div v-else>
+                <template v-else>
                     <wei-item :item="item" :formData="formData"
                               @inputFocus="$emit('inputFocus',{$event,i})"
                               @selectChange="selectChange"></wei-item>
-                </div>
+                </template>
             </div>
             <slot name="itemTail" :formData="formData"></slot>
         </el-form>
