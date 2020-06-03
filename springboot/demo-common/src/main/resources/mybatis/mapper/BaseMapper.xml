@@ -86,7 +86,35 @@
         FROM `${TABLE_NAME}`
         <where>
             <foreach collection="COLUMN_VALUE_MAP" index="key" item="value" separator="AND">
-                ${key} = #{value}
+                `${key}` = #{value}
+            </foreach>
+        </where>
+        LIMIT 1
+    </select>
+    <select id="findOneDataByTableNameAndBaseWhereList" resultType="Map">
+        SELECT *
+        FROM `${TABLE_NAME}`
+        <where>
+            <foreach collection="BASE_WHERE_LIST" item="item" separator="AND">
+                <choose>
+                    <when test="'IN' == item.WHERE">
+                        `${item.COLUMN}` IN (
+                        <foreach collection="item.VALUE" item="value" separator=",">
+                            #{value}
+                        </foreach>
+                        )
+                    </when>
+                    <when test="'NOT IN' == item.WHERE">
+                        `${item.COLUMN}` NOT IN (
+                        <foreach collection="item.VALUE" item="value" separator=",">
+                            #{value}
+                        </foreach>
+                        )
+                    </when>
+                    <otherwise>
+                        `${item.COLUMN}` ${item.WHERE} #{item.VALUE}
+                    </otherwise>
+                </choose>
             </foreach>
         </where>
         LIMIT 1
@@ -101,7 +129,37 @@
         FROM `${TABLE_NAME}`
         <where>
             <foreach collection="COLUMN_VALUE_MAP" index="key" item="value" separator="AND">
-                ${key} = #{value}
+                `${key}` = #{value}
+            </foreach>
+        </where>
+    </select>
+    <select id="findListByTableNameAndBaseWhereList" resultType="Map">
+        SELECT *
+        FROM `${TABLE_NAME}`
+        <where>
+            <foreach collection="BASE_WHERE_LIST" item="item" separator="AND">
+                <choose>
+                    <when test="'IN' == item.WHERE">
+                        `${item.COLUMN}` IN (
+                        <foreach collection="item.VALUE" item="value" separator=",">
+                            #{value}
+                        </foreach>
+                        )
+                    </when>
+                    <when test="'NOT IN' == item.WHERE">
+                        `${item.COLUMN}` NOT IN (
+                        <foreach collection="item.VALUE" item="value" separator=",">
+                            #{value}
+                        </foreach>
+                        )
+                    </when>
+                    <when test="'POSITION' == item.WHERE">
+                        POSITION(#{item.VALUE} IN `${item.COLUMN}`)
+                    </when>
+                    <otherwise>
+                        `${item.COLUMN}` ${item.WHERE} #{item.VALUE}
+                    </otherwise>
+                </choose>
             </foreach>
         </where>
     </select>

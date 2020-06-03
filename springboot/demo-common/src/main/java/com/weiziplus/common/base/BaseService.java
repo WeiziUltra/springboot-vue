@@ -714,6 +714,46 @@ public class BaseService {
     }
 
     /**
+     * 根据实体类和baseWhere列表获取一条数据
+     *
+     * @param clazz
+     * @param baseWhereList 如果条件是IN/NOT IN,baseWhere.value需要是一个数组
+     * @param <T>
+     * @return
+     */
+    protected <T> T baseFindOneDataByClassAndBaseWhereList(Class<T> clazz, List<BaseWhere> baseWhereList) {
+        if (null == clazz || null == baseWhereList || 0 >= baseWhereList.size()) {
+            return null;
+        }
+        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.equals(baseWhereList.get(0).getWhere())) {
+            log.debug("如果baseWhere数组只有一个的话推荐使用baseFindOneDataByClassAndColumnAndValue");
+        }
+        String tableName = getTableName(clazz);
+        List<Map<String, Object>> whereList = new ArrayList<>(ToolUtils.initialCapacity(baseWhereList.size()));
+        for (BaseWhere baseWhere : baseWhereList) {
+            if (!classIsContainsColumn(clazz, baseWhere.getColumn())) {
+                throw new RuntimeException("当前实体类" + clazz + "找不到该字段" + baseWhere.getColumn() + ";请使用实体类的静态常量");
+            }
+            if (!BaseWhere.Where.contains(baseWhere.getWhere())) {
+                throw new RuntimeException("根据实体类和baseWhere列表获取数据where条件错误;请使用BaseWhere中Where枚举，如有需要，您可以添加枚举");
+            }
+            whereList.add(new HashMap<String, Object>(ToolUtils.initialCapacity(3)) {{
+                put("COLUMN", baseWhere.getColumn());
+                put("WHERE", baseWhere.getWhere());
+                put("VALUE", baseWhere.getValue());
+            }});
+        }
+        Map<String, Object> byId = mapper.findOneDataByTableNameAndBaseWhereList(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
+            put("TABLE_NAME", tableName);
+            put("BASE_WHERE_LIST", whereList);
+        }});
+        if (null == byId) {
+            return null;
+        }
+        return JSON.parseObject(JSON.toJSONString(byId, SerializerFeature.WriteDateUseDateFormat), clazz);
+    }
+
+    /**
      * 根据实体类和字段和值获取列表
      *
      * @param clazz
@@ -769,6 +809,46 @@ public class BaseService {
             return null;
         }
         return JSONArray.parseArray(JSON.toJSONString(listByColumnMap, SerializerFeature.WriteDateUseDateFormat), clazz);
+    }
+
+    /**
+     * 根据实体类和baseWhere列表获取一条数据
+     *
+     * @param clazz
+     * @param baseWhereList 如果条件是IN/NOT IN,baseWhere.value需要是一个数组
+     * @param <T>
+     * @return
+     */
+    protected <T> List<T> baseFindListByClassAndBaseWhereList(Class<T> clazz, List<BaseWhere> baseWhereList) {
+        if (null == clazz || null == baseWhereList || 0 >= baseWhereList.size()) {
+            return null;
+        }
+        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.equals(baseWhereList.get(0).getWhere())) {
+            log.debug("如果baseWhere数组只有一个的话推荐使用baseFindOneDataByClassAndColumnAndValue");
+        }
+        String tableName = getTableName(clazz);
+        List<Map<String, Object>> whereList = new ArrayList<>(ToolUtils.initialCapacity(baseWhereList.size()));
+        for (BaseWhere baseWhere : baseWhereList) {
+            if (!classIsContainsColumn(clazz, baseWhere.getColumn())) {
+                throw new RuntimeException("当前实体类" + clazz + "找不到该字段" + baseWhere.getColumn() + ";请使用实体类的静态常量");
+            }
+            if (!BaseWhere.Where.contains(baseWhere.getWhere())) {
+                throw new RuntimeException("根据实体类和baseWhere列表获取数据where条件错误;请使用BaseWhere中Where枚举，如有需要，您可以添加枚举");
+            }
+            whereList.add(new HashMap<String, Object>(ToolUtils.initialCapacity(3)) {{
+                put("COLUMN", baseWhere.getColumn());
+                put("WHERE", baseWhere.getWhere());
+                put("VALUE", baseWhere.getValue());
+            }});
+        }
+        List<Map<String, Object>> byIds = mapper.findListByTableNameAndBaseWhereList(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
+            put("TABLE_NAME", tableName);
+            put("BASE_WHERE_LIST", whereList);
+        }});
+        if (null == byIds) {
+            return null;
+        }
+        return JSONArray.parseArray(JSON.toJSONString(byIds, SerializerFeature.WriteDateUseDateFormat), clazz);
     }
 
     /**

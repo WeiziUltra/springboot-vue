@@ -18,32 +18,6 @@ import java.util.List;
 public interface DataDictionaryIpManagerMapper {
 
     /**
-     * 根据ip地址获取一个pc端的ip信息
-     *
-     * @param ipAddress
-     * @return
-     */
-    @Select("" +
-            "SELECT * " +
-            "FROM `data_dictionary_value` " +
-            "WHERE dictionary_code IN ('pcIpFilterWhiteList','pcIpFilterBlackList','pcIpFilterAbnormalList') AND `value` = #{ipAddress} " +
-            "LIMIT 1")
-    DataDictionaryValue getOnePcIpInfoByAddress(@Param("ipAddress") String ipAddress);
-
-    /**
-     * 根据ip地址获取一个web端的ip信息
-     *
-     * @param ipAddress
-     * @return
-     */
-    @Select("" +
-            "SELECT * " +
-            "FROM `data_dictionary_value` " +
-            "WHERE dictionary_code IN ('webIpFilterWhiteList','webIpFilterBlackList','webIpFilterAbnormalList') AND `value` = #{ipAddress} " +
-            "LIMIT 1")
-    DataDictionaryValue getOneWebIpInfoByAddress(@Param("ipAddress") String ipAddress);
-
-    /**
      * 根据code删除字典值
      *
      * @param code

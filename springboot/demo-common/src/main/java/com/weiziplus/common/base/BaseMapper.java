@@ -93,6 +93,14 @@ public interface BaseMapper {
     Map<String, Object> findOneDataByColumnMap(Map<String, Object> map);
 
     /**
+     * 根据表名和baseWhere数组获取一条数据
+     *
+     * @param map
+     * @return
+     */
+    Map<String, Object> findOneDataByTableNameAndBaseWhereList(Map<String, Object> map);
+
+    /**
      * 根据表名和字段以及值获取列表
      *
      * @param map
@@ -107,6 +115,14 @@ public interface BaseMapper {
      * @return
      */
     List<Map<String, Object>> findListByColumnMap(Map<String, Object> map);
+
+    /**
+     * 根据表名和baseWhere数组获取数组
+     *
+     * @param map
+     * @return
+     */
+    List<Map<String, Object>> findListByTableNameAndBaseWhereList(Map<String, Object> map);
 
     /**
      * 获取所有数据

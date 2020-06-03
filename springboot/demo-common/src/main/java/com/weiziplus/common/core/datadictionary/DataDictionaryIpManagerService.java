@@ -2,6 +2,7 @@ package com.weiziplus.common.core.datadictionary;
 
 import com.github.pagehelper.PageHelper;
 import com.weiziplus.common.base.BaseService;
+import com.weiziplus.common.base.BaseWhere;
 import com.weiziplus.common.models.DataDictionary;
 import com.weiziplus.common.models.DataDictionaryValue;
 import com.weiziplus.common.models.SysError;
@@ -22,10 +23,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author wanglongwei
@@ -228,7 +226,17 @@ public class DataDictionaryIpManagerService extends BaseService {
         if (ToolUtils.isBlank(ipAddress)) {
             return;
         }
-        DataDictionaryValue dictionaryValue = mapper.getOnePcIpInfoByAddress(ipAddress);
+        //根据ip获取一条pc端的数据
+        DataDictionaryValue dictionaryValue = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
+            add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
+            add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
+                    new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
+                        add(DataDictionary.Code.PC_IP_FILTER_WHITE_LIST.getValue());
+                        add(DataDictionary.Code.PC_IP_FILTER_BLACK_LIST.getValue());
+                        add(DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue());
+                    }})
+            );
+        }});
         if (null == dictionaryValue) {
             dictionaryValue = new DataDictionaryValue()
                     .setDictionaryCode(DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue())
@@ -259,7 +267,17 @@ public class DataDictionaryIpManagerService extends BaseService {
         if (ToolUtils.isBlank(ipAddress)) {
             return;
         }
-        DataDictionaryValue dictionaryValue = mapper.getOneWebIpInfoByAddress(ipAddress);
+        //根据ip获取一条web端的数据
+        DataDictionaryValue dictionaryValue = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
+            add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
+            add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
+                    new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
+                        add(DataDictionary.Code.WEB_IP_FILTER_WHITE_LIST.getValue());
+                        add(DataDictionary.Code.WEB_IP_FILTER_BLACK_LIST.getValue());
+                        add(DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue());
+                    }})
+            );
+        }});
         if (null == dictionaryValue) {
             dictionaryValue = new DataDictionaryValue()
                     .setDictionaryCode(DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue())
@@ -335,10 +353,26 @@ public class DataDictionaryIpManagerService extends BaseService {
         switch (type.toUpperCase()) {
             case "PC": {
                 ipFilterRole = DataDictionary.Code.PC_IP_FILTER_ROLE.getValue();
+                //如果设置为只允许白名单
+                if (IpFilterRole.WHITE.getValue().equals(role)) {
+                    DataDictionaryValue value1 = baseFindOneDataByClassAndColumnAndValue(
+                            DataDictionaryValue.class, DataDictionaryValue.COLUMN_DICTIONARY_CODE, DataDictionary.Code.PC_IP_FILTER_WHITE_LIST.getValue());
+                    if (null == value1) {
+                        return ResultUtils.error("请先添加一个ip白名单");
+                    }
+                }
             }
             break;
             case "WEB": {
                 ipFilterRole = DataDictionary.Code.WEB_IP_FILTER_ROLE.getValue();
+                //如果设置为只允许白名单
+                if (IpFilterRole.WHITE.getValue().equals(role)) {
+                    DataDictionaryValue value1 = baseFindOneDataByClassAndColumnAndValue(
+                            DataDictionaryValue.class, DataDictionaryValue.COLUMN_DICTIONARY_CODE, DataDictionary.Code.WEB_IP_FILTER_WHITE_LIST.getValue());
+                    if (null == value1) {
+                        return ResultUtils.error("请先添加一个ip白名单");
+                    }
+                }
             }
             break;
             default: {
@@ -411,7 +445,17 @@ public class DataDictionaryIpManagerService extends BaseService {
                         && !DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue().equals(type)) {
                     return ResultUtils.error("类型错误");
                 }
-                DataDictionaryValue onePcIpInfoByAddress = mapper.getOnePcIpInfoByAddress(ipAddress);
+                //根据ip地址获取pc名单中的一条数据
+                DataDictionaryValue onePcIpInfoByAddress = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
+                    add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
+                    add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
+                            new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
+                                add(DataDictionary.Code.PC_IP_FILTER_WHITE_LIST.getValue());
+                                add(DataDictionary.Code.PC_IP_FILTER_BLACK_LIST.getValue());
+                                add(DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue());
+                            }})
+                    );
+                }});
                 if (null != onePcIpInfoByAddress) {
                     return ResultUtils.error("该ip地址已存在,code:" + onePcIpInfoByAddress.getDictionaryCode());
                 }
@@ -423,7 +467,17 @@ public class DataDictionaryIpManagerService extends BaseService {
                         && !DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue().equals(type)) {
                     return ResultUtils.error("类型错误");
                 }
-                DataDictionaryValue oneWebIpInfoByAddress = mapper.getOneWebIpInfoByAddress(ipAddress);
+                //根据ip地址获取web名单中的一条数据
+                DataDictionaryValue oneWebIpInfoByAddress = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
+                    add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
+                    add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
+                            new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
+                                add(DataDictionary.Code.WEB_IP_FILTER_WHITE_LIST.getValue());
+                                add(DataDictionary.Code.WEB_IP_FILTER_BLACK_LIST.getValue());
+                                add(DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue());
+                            }})
+                    );
+                }});
                 if (null != oneWebIpInfoByAddress) {
                     return ResultUtils.error("该ip地址已存在,code:" + oneWebIpInfoByAddress.getDictionaryCode());
                 }
