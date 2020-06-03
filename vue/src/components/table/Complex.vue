@@ -84,7 +84,7 @@
                           border highlight-current-row size="small">
                     <el-table-column v-if="showSelection" type="selection" width="40"></el-table-column>
                     <el-table-column label="序号" type="index" fixed="left" width="50"></el-table-column>
-                    <slot name="startColumn"></slot>
+                    <slot name="startColumn" :data="tableData"></slot>
                     <el-table-column
                             v-for="column in tableShowColumns"
                             :key="column.prop"
@@ -166,7 +166,7 @@
                             </template>
                         </template>
                     </el-table-column>
-                    <slot name="endColumn"></slot>
+                    <slot name="endColumn" :data="tableData"></slot>
                     <!--表格中的操作按钮组-->
                     <el-table-column label="操作" fixed="right" prop="tableEditColumn"
                                      v-if="tableOperates && tableOperates.buttons && 0 < tableOperates.buttons.length"

@@ -2,7 +2,7 @@
     <div id="dialogForm" style="overflow: hidden;">
         <el-form ref="form" size="mini" :label-width="labelWidth"
                  :model="formData || {}" :rules="formRules || {}">
-            <slot name="itemHead"></slot>
+            <slot name="itemHead" :formData="formData"></slot>
             <div v-for="item in formOptions" :key="item.prop"
                  v-if="!item['hidden']">
                 <!--一行展示多个-->
@@ -11,13 +11,13 @@
                         <template v-for="i in item.items">
                             <!--station表示仅用作占位-->
                             <template v-if="i.station">
-                                <el-form-item></el-form-item>
+                                <el-form-item :style="`flex:${i.flex || 1}`"></el-form-item>
                             </template>
                             <template v-else>
                                 <wei-item :item="i" :formData="formData"
                                           v-if="!i['hidden']"
                                           :style="`flex:${i.flex || 1}`"
-                                          @inputFocus="$emit('inputFocus',i)"
+                                          @inputFocus="$emit('inputFocus',{$event,i})"
                                           @selectChange="selectChange">>
                                 </wei-item>
                             </template>
@@ -27,10 +27,11 @@
                 <!--一行展示一个-->
                 <div v-else>
                     <wei-item :item="item" :formData="formData"
+                              @inputFocus="$emit('inputFocus',{$event,i})"
                               @selectChange="selectChange"></wei-item>
                 </div>
             </div>
-            <slot name="itemTail"></slot>
+            <slot name="itemTail" :formData="formData"></slot>
         </el-form>
         <div v-if="showFooterButton" slot="footer">
             <div style="float: right;">
