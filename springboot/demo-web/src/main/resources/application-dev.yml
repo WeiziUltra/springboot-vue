@@ -27,5 +27,5 @@ global:
   cors-filter-origins: '*'
   #是否將异常详情展示给前端
   response-show-runtime-exception: true
-  #是否开启拦截 `AuthorizationInterceptor` 开发环境下关闭方便调试
-  open-interceptor: false
+  #是否开启时间戳校验
+  check-timeStamp: false

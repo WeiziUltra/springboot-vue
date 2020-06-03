@@ -39,10 +39,10 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     LogAsync logAsync;
 
     /**
-     * 是否开启器过滤
+     * 是否检验时间戳
      */
-    @Value("${global.open-interceptor:true}")
-    private final Boolean OPEN_INTERCEPTOR = true;
+    @Value("${global.check-timeStamp:true}")
+    private final Boolean CHECK_TIMESTAMP = true;
 
     /**
      * 配置忽略的url
@@ -140,10 +140,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         if (!(object instanceof HandlerMethod)) {
             return true;
         }
-        //如果关闭过滤检测
-        if (!OPEN_INTERCEPTOR) {
-            return true;
-        }
         //获取当前访问的url
         String requestUrl = request.getRequestURI();
         //如果有统一的请求前缀
@@ -159,10 +155,13 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         if (IGNORE_URL.contains(requestUrl)) {
             return true;
         }
-        //判断时间戳有效
-        if (!handleTimeStamp(request)) {
-            handleResponse(response, ResultUtils.error("时间戳错误"));
-            return false;
+        //开启时间戳校验
+        if (CHECK_TIMESTAMP) {
+            //判断时间戳有效
+            if (!handleTimeStamp(request)) {
+                handleResponse(response, ResultUtils.error("时间戳错误"));
+                return false;
+            }
         }
         //判断是否存在token注解
         if (handleTokenAnnotation(object)) {

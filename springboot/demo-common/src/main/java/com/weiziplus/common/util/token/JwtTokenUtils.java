@@ -57,15 +57,15 @@ public class JwtTokenUtils {
 
     /**
      * 创建issuer
-     * ip地址和浏览器组
+     * ip地址和浏览器
      *
      * @param request
      * @return
      */
     public static String createIssuer(HttpServletRequest request) {
         String ipAddress = HttpRequestUtils.getIpAddress(request);
-        String borderGroup = UserAgentUtils.getBorderGroup(request);
-        return Md5Utils.encode16(ipAddress + borderGroup);
+        String borderName = UserAgentUtils.getBorderName(request);
+        return Md5Utils.encode16(ipAddress + borderName);
     }
 
     /**
