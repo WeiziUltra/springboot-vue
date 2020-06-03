@@ -55,11 +55,11 @@ public class BaseWhere implements Serializable {
          * sql条件
          */
         EQUAL("等于", "="),
-        NOT_EQUAL("不等于", "<![CDATA[<>]]>"),
-        MORE_THAN("大于", "<![CDATA[>]]>"),
-        LESS_THAN("小于", "<![CDATA[<]]>"),
-        MORE_THAN_EQUAL("大于等于", "<![CDATA[>=]]>"),
-        LESS_THAN_EQUAL("小于等于", "<![CDATA[<=]]>"),
+        NOT_EQUAL("不等于", "<>"),
+        MORE_THAN("大于", ">"),
+        LESS_THAN("小于", "<"),
+        MORE_THAN_EQUAL("大于等于", ">="),
+        LESS_THAN_EQUAL("小于等于", "<="),
         IN("IN", "IN"),
         NOT_IN("NOT_IN", "NOT IN"),
         POSITION("POSITION", "POSITION");
