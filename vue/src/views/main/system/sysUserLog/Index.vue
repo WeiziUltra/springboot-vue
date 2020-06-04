@@ -13,6 +13,26 @@
                        :visible.sync="dialogDetail">
                 <detail :formData="formData"></detail>
             </el-dialog>
+            <el-dialog title="导出日志"
+                       :visible.sync="dialogExportExcel">
+                <el-form :inline="true">
+                    <el-form-item label="开始时间">
+                        <el-date-picker type="datetime" placeholder="开始时间"
+                                        :value-format="'yyyy-MM-dd HH:mm:ss'"
+                                        v-model="startTime">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="截止时间">
+                        <el-date-picker type="datetime" placeholder="截止时间"
+                                        :value-format="'yyyy-MM-dd HH:mm:ss'"
+                                        v-model="endTime">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="exportExcel">导出</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
         </template>
     </div>
 </template>
@@ -26,6 +46,14 @@
         },
         data() {
             let that = this;
+            let roleIdList = this.$globalFun.getSessionStorage('roleIdList');
+            let {id} = this.$globalFun.getSessionStorage('userInfo');
+            let {
+                super_admin_id, super_admin_role_id
+            } = this.$global.GLOBAL;
+            //如果是超级管理员
+            let superAdminFlag = roleIdList.includes(super_admin_role_id)
+                || id === super_admin_id;
             return {
                 tableDataRequest: {
                     url: that.$global.URL.system.sysUserLog.getPageList,
@@ -73,9 +101,9 @@
                 //表格上面按钮
                 tableHeaderButtons: [
                     {
-                        name: '导出excel', icon: 'el-icon-notebook-2', type: 'success', show: true,
+                        name: '导出excel', icon: 'el-icon-notebook-2', type: 'success', show: superAdminFlag,
                         handleClick() {
-                            that.exportExcel();
+                            that.dialogExportExcel = true;
                         }
                     }
                 ],
@@ -117,6 +145,12 @@
                 formData: {},
                 //详情弹窗
                 dialogDetail: false,
+                //导出系统日志
+                dialogExportExcel: false,
+                //导出开始时间
+                startTime: '',
+                //导出截止时间
+                endTime: ''
             }
         },
         methods: {
@@ -124,7 +158,14 @@
                 let that = this;
                 this.$axiosDown({
                     url: that.$global.URL.system.sysUserLog.exportExcel,
-                    filename: '系统用户日志.xlsx'
+                    data: {
+                        startTime: that.startTime,
+                        endTime: that.endTime,
+                    },
+                    filename: '系统用户日志.xlsx',
+                    success() {
+                        that.dialogExportExcel = false;
+                    }
                 })
             }
         }
