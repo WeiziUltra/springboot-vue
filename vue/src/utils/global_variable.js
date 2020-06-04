@@ -95,7 +95,9 @@ const URL = {
         /*********************系统用户日志*****************/
         sysUserLog: {
             /*获取分页数据*/
-            getPageList: '/sysUserLog/getPageList'
+            getPageList: '/sysUserLog/getPageList',
+            /*导出excel*/
+            exportExcel: '/sysUserLog/exportExcel'
         },
         /*********************系统异常*****************/
         sysError: {

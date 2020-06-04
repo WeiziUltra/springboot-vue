@@ -4,6 +4,7 @@
             <wei-table ref="table"
                        :tableDataRequest="tableDataRequest"
                        :tableColumns="tableColumns"
+                       :tableHeaderButtons="tableHeaderButtons"
                        :tableOperates="tableOperates"
                        :tableSearch="tableSearch"></wei-table>
         </template>
@@ -69,6 +70,15 @@
                         }
                     }
                 ],
+                //表格上面按钮
+                tableHeaderButtons: [
+                    {
+                        name: '导出excel', icon: 'el-icon-notebook-2', type: 'success', show: true,
+                        handleClick() {
+                            that.exportExcel();
+                        }
+                    }
+                ],
                 //表格对应每一行按钮
                 tableOperates: {
                     //按钮数组
@@ -107,6 +117,15 @@
                 formData: {},
                 //详情弹窗
                 dialogDetail: false,
+            }
+        },
+        methods: {
+            exportExcel() {
+                let that = this;
+                this.$axiosDown({
+                    url: that.$global.URL.system.sysUserLog.exportExcel,
+                    filename: '系统用户日志.xlsx'
+                })
             }
         }
     }

@@ -56,4 +56,17 @@ public class SysUserLogController {
                 createTimeSort);
     }
 
+    @ApiOperation(value = "导出excel")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "startTime", value = "开始时间", required = true, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "endTime", value = "截止时间", required = true, dataType = "String", paramType = "form"),
+    })
+    @PostMapping("/exportExcel")
+    @SysUserLog(description = "导出系统用户日志excel")
+    public void exportExcel(
+            @RequestParam(defaultValue = "1990-01-01 00:00:00") String startTime,
+            @RequestParam(defaultValue = "2200-12-31 23:59:59") String endTime) {
+        service.exportExcel(startTime, endTime);
+    }
+
 }
