@@ -2,6 +2,8 @@
 import {Message, MessageBox, prompt} from 'element-ui';
 /*引入AES加密*/
 import CryptoJs from "crypto-js";
+/*引入jsencrypt*/
+import JsEncrypt from 'jsencrypt';
 
 //某种程度上加混淆
 let {enc, mode, pad} = CryptoJs;
@@ -427,6 +429,20 @@ function sortAscii(obj) {
 }
 
 /**
+ * rsa公钥加密
+ * @param key
+ * @param obj
+ * @returns {PromiseLike<ArrayBuffer> | *}
+ */
+function rsaPublicEncrypt(key, obj) {
+    let encrypt = new JsEncrypt();
+    //设置加密公钥
+    encrypt.setPublicKey(key);
+    //返回通过encryptLong方法加密后的结果
+    return encrypt.encrypt(obj);
+}
+
+/**
  * 将方法暴露出去
  */
 export default {
@@ -451,5 +467,6 @@ export default {
     setSessionStorage,
     getLocationStorage,
     setLocationStorage,
-    sortAscii
+    sortAscii,
+    rsaPublicEncrypt
 };
