@@ -39,4 +39,14 @@ public class Md5Utils {
         return encode.substring(8, 24);
     }
 
+    /**
+     * 32位没有加密盐
+     *
+     * @param str
+     * @return
+     */
+    public static String encodeNotSalt(String str) {
+        return DigestUtils.md5DigestAsHex(str.getBytes(StandardCharsets.UTF_8)).toUpperCase();
+    }
+
 }

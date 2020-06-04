@@ -613,7 +613,12 @@
         }
 
         /*表格树形结构，箭头错位*/
-        .el-table table tbody tr td.tree .cell.el-tooltip {
+        .el-table table tbody tr td:nth-child(3) .cell.el-tooltip {
+            display: flex;
+        }
+
+        /*表格树形结构，箭头错位*/
+        .el-table table tbody tr td:nth-child(2) .cell.el-tooltip {
             display: flex;
         }
 

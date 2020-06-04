@@ -22,10 +22,29 @@ axios.interceptors.request.use(
 );
 
 /**
+ * 获取url中参数的map
+ * @param url
+ */
+function getUrlParamMap(url) {
+    let split = url.split("?");
+    if (1 >= split.length) {
+        return {};
+    }
+    let params = split[1].split("&") || [];
+    let obj = {};
+    params.forEach(value => {
+        let param = value.split('=');
+        obj[param[0]] = param[1];
+    });
+    return obj;
+}
+
+/**
  * 封装axios请求
  *
  * @param allUrl 请求的url为完整url
  * @param allSuccess 返回所有成功回调,不包含status不是200的出错请求
+ * @param isSign 是否需要计算签名
  * @param url 请求地址
  * @param method 请求方式
  * @param headers 请求头
@@ -41,6 +60,7 @@ export function weiAxios(
     {
         allUrl = false,
         allSuccess = false,
+        isSign = false,
         url = '',
         method = 'get',
         header = 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -82,6 +102,18 @@ export function weiAxios(
         }
         /**axios请求参数添加随机字符串*/
         data['__t'] = (new Date()).getTime();
+        //如果需要计算签名
+        if (isSign) {
+            let urlParamMap = getUrlParamMap(url);
+            for (let key in urlParamMap) {
+                if (!urlParamMap.hasOwnProperty(key)) {
+                    return;
+                }
+                data[key] = urlParamMap[key];
+            }
+            let asciiStr = that.$globalFun.sortAscii(data);
+            data['__sign'] = that.$globalFun.md5NoSalt(asciiStr);
+        }
         /**axios请求处理不同请求方式时的参数*/
         method = method.toUpperCase();
         if (method === 'GET') {
@@ -147,6 +179,7 @@ export function weiAxios(
  * @param url
  * @param method
  * @param data
+ * @param isSign 是否需要计算签名
  * @param filename 文件名字
  * @param timeShowLoadAnimation 多长时间之后显示加载中动画，单位毫秒
  * @param success
@@ -158,6 +191,7 @@ export function weiAxiosDown(
         url = '',
         method = 'post',
         data = {},
+        isSign = false,
         filename = '新建文件',
         timeShowLoadAnimation = 555,
         success = function () {
@@ -189,6 +223,18 @@ export function weiAxiosDown(
         _axios['headers'][that.$global.GLOBAL.token] = that.$globalFun.getSessionStorage(`token`) || '';
         /**axios请求参数添加随机字符串*/
         data['__t'] = (new Date()).getTime();
+        //如果需要计算签名
+        if (isSign) {
+            let urlParamMap = getUrlParamMap(url);
+            for (let key in urlParamMap) {
+                if (!urlParamMap.hasOwnProperty(key)) {
+                    return;
+                }
+                data[key] = urlParamMap[key];
+            }
+            let asciiStr = that.$globalFun.sortAscii(data);
+            data['__sign'] = that.$globalFun.md5NoSalt(asciiStr);
+        }
         /**axios请求处理不同请求方式时的参数*/
         method = method.toUpperCase();
         if (method === 'GET') {

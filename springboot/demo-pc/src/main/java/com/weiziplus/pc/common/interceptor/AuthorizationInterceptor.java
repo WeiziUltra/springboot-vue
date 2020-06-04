@@ -3,10 +3,7 @@ package com.weiziplus.pc.common.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.weiziplus.common.async.LogAsync;
 import com.weiziplus.common.async.UserAsync;
-import com.weiziplus.common.util.HttpRequestUtils;
-import com.weiziplus.common.util.ResultUtils;
-import com.weiziplus.common.util.ToolUtils;
-import com.weiziplus.common.util.UserAgentUtils;
+import com.weiziplus.common.util.*;
 import com.weiziplus.common.util.redis.StringRedisUtils;
 import com.weiziplus.common.util.token.AdminTokenUtils;
 import com.weiziplus.common.util.token.JwtTokenUtils;
@@ -22,6 +19,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.Console;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -185,7 +183,12 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             handleResponse(response, ResultUtils.errorToken("token不存在"));
             return false;
         }
-        return handleAdminToken(request, response, object);
+        //保存用户操作，校验用户权限等
+        if (!handleAdminToken(request, response, object)) {
+            return false;
+        }
+        //校验签名
+        return handleSign(request, response, object);
     }
 
     /**
@@ -276,6 +279,46 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
         handleResponse(response, ResultUtils.errorRole("您没有权限"));
+        return false;
+    }
+
+    /**
+     * 是否需要签名处理
+     * 所有请求参数（排除__sign）需要按照ascii排序，然后进行MD5加密
+     *
+     * @param request
+     * @param response
+     * @param object
+     * @return
+     */
+    private boolean handleSign(HttpServletRequest request, HttpServletResponse response, Object object) {
+        HandlerMethod handlerMethod = (HandlerMethod) object;
+        Method method = handlerMethod.getMethod();
+        //如果没有签名注解直接返回
+        if (null == handlerMethod.getBeanType().getAnnotation(SignValidation.class)
+                && null == method.getAnnotation(SignValidation.class)) {
+            return true;
+        }
+        TreeMap<String, String[]> stringTreeMap = new TreeMap<>(request.getParameterMap());
+        Set<String> keySet = stringTreeMap.keySet();
+        String signParam = "__sign";
+        if (!keySet.contains(signParam)) {
+            handleResponse(response, ResultUtils.error("签名错误"));
+            return false;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String key : keySet) {
+            //跳过__sign参数
+            if (signParam.equals(key)) {
+                continue;
+            }
+            stringBuilder.append(key).append("=").append(stringTreeMap.get(key)[0]).append("&");
+        }
+        String s = Md5Utils.encodeNotSalt(stringBuilder.substring(0, stringBuilder.length() - 1));
+        if (stringTreeMap.get(signParam)[0].equals(s)) {
+            return true;
+        }
+        handleResponse(response, ResultUtils.error("签名错误"));
         return false;
     }
 

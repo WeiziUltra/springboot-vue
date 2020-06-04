@@ -3,10 +3,7 @@ package com.weiziplus.web.common.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.weiziplus.common.async.LogAsync;
 import com.weiziplus.common.async.UserAsync;
-import com.weiziplus.common.util.HttpRequestUtils;
-import com.weiziplus.common.util.ResultUtils;
-import com.weiziplus.common.util.ToolUtils;
-import com.weiziplus.common.util.UserAgentUtils;
+import com.weiziplus.common.util.*;
 import com.weiziplus.common.util.redis.StringRedisUtils;
 import com.weiziplus.common.util.token.JwtTokenUtils;
 import com.weiziplus.common.util.token.WebTokenUtils;
@@ -181,7 +178,12 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             handleResponse(response, ResultUtils.errorToken("token不存在"));
             return false;
         }
-        return handleWebToken(request, response, object);
+        //保存用户日志
+        if (!handleWebToken(request, response, object)) {
+            return false;
+        }
+        //校验签名
+        return handleSign(request, response, object);
     }
 
     /**
@@ -239,6 +241,45 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         //异步更新用户最后活跃时间
         userAsync.updateUserLastActiveTime(userId, HttpRequestUtils.getIpAddress(request));
         return true;
+    }
+
+    /**
+     * 是否需要签名处理
+     *
+     * @param request
+     * @param response
+     * @param object
+     * @return
+     */
+    private boolean handleSign(HttpServletRequest request, HttpServletResponse response, Object object) {
+        HandlerMethod handlerMethod = (HandlerMethod) object;
+        Method method = handlerMethod.getMethod();
+        //如果没有签名注解直接返回
+        if (null == handlerMethod.getBeanType().getAnnotation(SignValidation.class)
+                && null == method.getAnnotation(SignValidation.class)) {
+            return true;
+        }
+        TreeMap<String, String[]> stringTreeMap = new TreeMap<>(request.getParameterMap());
+        Set<String> keySet = stringTreeMap.keySet();
+        String signParam = "__sign";
+        if (!keySet.contains(signParam)) {
+            handleResponse(response, ResultUtils.error("签名错误"));
+            return false;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String key : keySet) {
+            //跳过__sign参数
+            if (signParam.equals(key)) {
+                continue;
+            }
+            stringBuilder.append(key).append("=").append(stringTreeMap.get(key)[0]).append("&");
+        }
+        String s = Md5Utils.encodeNotSalt(stringBuilder.substring(0, stringBuilder.length() - 1));
+        if (stringTreeMap.get(signParam)[0].equals(s)) {
+            return true;
+        }
+        handleResponse(response, ResultUtils.error("签名错误"));
+        return false;
     }
 
     /**

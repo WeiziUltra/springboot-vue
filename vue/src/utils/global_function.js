@@ -341,6 +341,18 @@ function md5(str) {
 }
 
 /**
+ * md5加密没有加密盐
+ * @param str
+ * @returns {*}
+ */
+function md5NoSalt(str) {
+    if (null == str) {
+        return null;
+    }
+    return CryptoJs.MD5(str).toString().toUpperCase();
+}
+
+/**
  * 获取session存储的数据
  * @param key
  * @returns {*}
@@ -393,6 +405,28 @@ function setLocationStorage(key, value = '') {
 }
 
 /**
+ * 对象进行ascii排序
+ * @param obj
+ * @returns {*}
+ */
+function sortAscii(obj) {
+    if (null == obj) {
+        return null;
+    }
+    let arr = [];
+    let index = 0;
+    for (let key in obj) {
+        arr[index] = key;
+        index++;
+    }
+    let str = '';
+    arr.sort().forEach(value => {
+        str += `${value}=${('' + obj[value]).replace(/(^\s*)|(\s*$)/g, "")}&`;
+    });
+    return str.substr(0, str.length - 1);
+}
+
+/**
  * 将方法暴露出去
  */
 export default {
@@ -412,8 +446,10 @@ export default {
     base64Encrypt,
     base64Decrypt,
     md5,
+    md5NoSalt,
     getSessionStorage,
     setSessionStorage,
     getLocationStorage,
-    setLocationStorage
+    setLocationStorage,
+    sortAscii
 };
