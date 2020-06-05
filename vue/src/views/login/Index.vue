@@ -129,11 +129,11 @@
                 this.$globalFun.setSessionStorage('roleIdList', data['roleIdList']);
                 this.$globalFun.setSessionStorage('userInfo', data['userInfo']);
                 let menuTree = data['menuTree'];
-                this.$globalFun.setSessionStorage('menuTree', menuTree);
                 if (null == menuTree || 0 >= menuTree.length) {
                     this.$globalFun.errorMsg("您还没有可用菜单，请联系管理员添加");
                     return;
                 }
+                this.$globalFun.setSessionStorage('menuTree', menuTree);
                 this.handleRouter(menuTree);
             },
             /**

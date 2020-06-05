@@ -1,6 +1,6 @@
 <template>
     <div id="wei-dialog-detail">
-        <slot name="rowHead" :row="row"></slot>
+        <slot name="rowHead"></slot>
         <el-row v-for="(row,index) in rows" :key="row.label || index"
                 v-if="!row['hidden']">
             <el-col :span="colNum">
@@ -79,7 +79,7 @@
                 </div>
             </el-col>
         </el-row>
-        <slot name="rowTail" :row="row"></slot>
+        <slot name="rowTail"></slot>
         <div class="show">
             <el-dialog :visible.sync="dialogShowImage">
                 <img width="100%" :src="dialogImageUrl">

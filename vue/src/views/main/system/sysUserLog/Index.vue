@@ -74,7 +74,7 @@
                                 {content: '删除', type: 'danger'},
                             ];
                             return result[type] || {
-                                content: '未知类型',
+                                content: `未知类型,type:${type}`,
                                 type: 'danger'
                             }
                         }
