@@ -54,6 +54,20 @@
                             }
                         }
                     },
+                    {
+                        label: '专属', type: 'tag',
+                        element() {
+                            let result = [
+                                null,
+                                {content: '普通', type: 'info'},
+                                {content: 'vip', type: 'success'},
+                            ];
+                            return result[data['superFlag']] || {
+                                content: `未知类型,superFlag:${data['superFlag']}`,
+                                type: 'danger'
+                            }
+                        }
+                    },
                     {label: '排序', prop: data['sort']},
                     {
                         label: '拥有api', prop: data['containApi'], formatter() {

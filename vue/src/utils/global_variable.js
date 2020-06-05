@@ -109,6 +109,13 @@ const URL = {
             /*获取分页数据*/
             getPageList: '/userLog/getPageList'
         },
+        /*********************系统文件*****************/
+        sysFile: {
+            /*获取日志文件*/
+            getLogFile: '/sysFile/getLogFile',
+            /*下载日志文件*/
+            downLogFile: '/sysFile/downLogFile',
+        },
     },
     /*************字典管理*****************/
     dataDictionary: {

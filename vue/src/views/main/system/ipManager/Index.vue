@@ -5,7 +5,8 @@
             <el-tab-pane name="PC" label="PC端ip过滤配置">
                 <el-divider content-position="left">过滤规则</el-divider>
                 <div class="role">
-                    <el-radio-group v-model="pcIpFilterRole">
+                    <el-radio-group :disabled="!haveUpdateRole"
+                                    v-model="pcIpFilterRole">
                         <el-radio label="all">全部允许</el-radio>
                         <el-radio label="white">只允许白名单</el-radio>
                         <el-radio label="black">只禁止黑名单</el-radio>
@@ -25,7 +26,8 @@
             <el-tab-pane name="WEB" label="WEB端ip过滤配置">
                 <el-divider content-position="left">过滤规则</el-divider>
                 <div class="role">
-                    <el-radio-group v-model="webIpFilterRole">
+                    <el-radio-group :disabled="!haveUpdateRole"
+                                    v-model="webIpFilterRole">
                         <el-radio label="all">全部允许</el-radio>
                         <el-radio label="white">只允许白名单</el-radio>
                         <el-radio label="black">只禁止黑名单</el-radio>

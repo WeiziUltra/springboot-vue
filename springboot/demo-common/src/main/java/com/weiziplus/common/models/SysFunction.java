@@ -112,6 +112,48 @@ public class SysFunction implements Serializable {
     }
 
     /**
+     * 超级管理员专属功能,1:普通,2:vip
+     */
+    @BaseColumn("super_flag")
+    @ApiModelProperty("超级管理员专属功能,1:普通,2:vip")
+    private Integer superFlag;
+
+    @Getter
+    @Alias("SysFunctionSuperFlag")
+    public enum SuperFlag {
+
+        /**
+         * 超级管理员专属功能
+         */
+        GENERAL("普通", 1),
+        VIP("专属", 2);
+
+        private String name;
+        private Integer value;
+
+        SuperFlag(String name, Integer value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        /**
+         * 是否存在
+         *
+         * @param value
+         * @return
+         */
+        public static boolean contains(Integer value) {
+            for (SuperFlag superFlag : SuperFlag.values()) {
+                if (superFlag.getValue().equals(value)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
+    /**
      * 功能图标
      */
     @BaseColumn("icon")
@@ -157,6 +199,8 @@ public class SysFunction implements Serializable {
     public static final String COLUMN_CONTAIN_API = "contain_api";
 
     public static final String COLUMN_TYPE = "type";
+
+    public static final String COLUMN_SUPER_FLAG = "super_flag";
 
     public static final String COLUMN_ICON = "icon";
 

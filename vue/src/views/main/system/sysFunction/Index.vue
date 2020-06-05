@@ -32,14 +32,9 @@
         },
         data() {
             let that = this;
-            let roleIdList = this.$globalFun.getSessionStorage('roleIdList');
-            let {id} = this.$globalFun.getSessionStorage('userInfo');
             let {
-                super_admin_id, super_admin_role_id
-            } = this.$global.GLOBAL;
-            //如果是超级管理员
-            let superAdminFlag = roleIdList.includes(super_admin_role_id)
-                || id === super_admin_id;
+                sysFunction_add, sysFunction_update, sysFunction_delete
+            } = this.$globalFun.getSessionStorage('buttonMap');
             return {
                 tableDataRequest: {
                     url: that.$global.URL.system.sysFunction.getPageList,
@@ -63,7 +58,21 @@
                                 {content: '按钮', type: 'success'},
                             ];
                             return result[type] || {
-                                content: '未知类型',
+                                content: `未知类型,type:${type}`,
+                                type: 'danger'
+                            }
+                        }
+                    },
+                    {
+                        label: '专属', type: 'tag',
+                        element({superFlag}) {
+                            let result = [
+                                null,
+                                {content: '普通', type: 'info'},
+                                {content: 'vip', type: 'success'},
+                            ];
+                            return result[superFlag] || {
+                                content: `未知类型,superFlag:${superFlag}`,
                                 type: 'danger'
                             }
                         }
@@ -87,11 +96,12 @@
                 //表格上面按钮
                 tableHeaderButtons: [
                     {
-                        name: '新增', icon: 'el-icon-plus', type: 'success', show: superAdminFlag,
+                        name: '新增', icon: 'el-icon-plus', type: 'success', show: sysFunction_add,
                         handleClick() {
                             that.editType = 'add';
                             that.formData = {
-                                type: 1
+                                type: 1,
+                                superFlag: 1
                             };
                             that.dialogEditForm = true;
                         }
@@ -110,7 +120,7 @@
                                 }
                             },
                             {
-                                name: '编辑', type: 'warning', show: superAdminFlag,
+                                name: '编辑', type: 'warning', show: sysFunction_update,
                                 handleClick(row) {
                                     that.editType = 'update';
                                     that.formData = row;
@@ -118,7 +128,7 @@
                                 }
                             },
                             {
-                                name: '删除', type: 'danger', show: superAdminFlag,
+                                name: '删除', type: 'danger', show: sysFunction_delete,
                                 handleClick(row) {
                                     that.deleteFunction(row);
                                 }

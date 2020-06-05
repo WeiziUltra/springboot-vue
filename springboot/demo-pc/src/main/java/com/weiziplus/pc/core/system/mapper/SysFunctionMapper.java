@@ -61,8 +61,9 @@ public interface SysFunctionMapper {
     @Select("" +
             "SELECT * " +
             "FROM `sys_function` " +
+            "WHERE `super_flag` = 1 " +
             "ORDER BY `sort` ASC,`create_time` DESC ")
-    List<SysFunction> getAllFunctionList();
+    List<SysFunction> getAllFunctionListNotVip();
 
     /**
      * 获取所有功能菜单列表

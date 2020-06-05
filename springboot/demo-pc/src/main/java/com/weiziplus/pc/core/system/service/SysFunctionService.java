@@ -1,5 +1,6 @@
 package com.weiziplus.pc.core.system.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.weiziplus.common.base.BaseService;
 import com.weiziplus.common.models.SysFunction;
@@ -97,7 +98,7 @@ public class SysFunctionService extends BaseService {
             return ResultUtils.success(sysFunctionList);
         }
         Integer minParentId = mapper.getMinParentId();
-        List<SysFunction> allFunctionList = mapper.getAllFunctionList();
+        List<SysFunction> allFunctionList = mapper.getAllFunctionListNotVip();
         List<SysFunction> resultList = new ArrayList<>();
         for (SysFunction sysFunction : allFunctionList) {
             if (!minParentId.equals(sysFunction.getParentId())) {
@@ -156,6 +157,9 @@ public class SysFunctionService extends BaseService {
         if (!SysFunction.Type.contains(sysFunctionDto.getType())) {
             return ResultUtils.error("类型错误");
         }
+        if (!SysFunction.SuperFlag.contains(sysFunctionDto.getSuperFlag())) {
+            return ResultUtils.error("专属类型错误");
+        }
         if (!ToolUtils.isBlank(sysFunctionDto.getContainApi())) {
             String replace = sysFunctionDto.getContainApi()
                     .replaceAll("[^(a-zA-Z/，,)]*", "")
@@ -198,6 +202,9 @@ public class SysFunctionService extends BaseService {
         }
         if (!SysFunction.Type.contains(sysFunction.getType())) {
             return ResultUtils.error("类型错误");
+        }
+        if (!SysFunction.SuperFlag.contains(sysFunction.getSuperFlag())) {
+            return ResultUtils.error("专属类型错误");
         }
         if (!ToolUtils.isBlank(sysFunction.getContainApi())) {
             String replace = sysFunction.getContainApi()

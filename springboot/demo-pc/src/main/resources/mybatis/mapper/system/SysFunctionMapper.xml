@@ -17,8 +17,9 @@
         ) AND sr.status = 1
         ) temp
         LEFT JOIN sys_function sf ON temp.id = sf.id
+        WHERE sf.super_flag = 1
         <if test="null != type">
-            WHERE sf.type = #{type}
+            AND sf.type = #{type}
         </if>
         ORDER BY sf.parent_id ASC
     </select>

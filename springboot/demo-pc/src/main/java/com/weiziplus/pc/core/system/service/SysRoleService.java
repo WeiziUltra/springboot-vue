@@ -2,6 +2,8 @@ package com.weiziplus.pc.core.system.service;
 
 import com.github.pagehelper.PageHelper;
 import com.weiziplus.common.base.BaseService;
+import com.weiziplus.common.base.BaseWhere;
+import com.weiziplus.common.models.SysFunction;
 import com.weiziplus.common.models.SysRole;
 import com.weiziplus.common.models.SysRoleFunction;
 import com.weiziplus.common.util.DateUtils;
@@ -196,6 +198,12 @@ public class SysRoleService extends BaseService {
             return ResultUtils.success();
         }
         //不为空，重新赋值权限
+        List<SysFunction> sysFunctionList = baseFindByClassAndIds(SysFunction.class, functionIds);
+        for (SysFunction sysFunction : sysFunctionList) {
+            if (SysFunction.SuperFlag.VIP.getValue().equals(sysFunction.getSuperFlag())) {
+                return ResultUtils.error("功能ids超出权限");
+            }
+        }
         List<SysRoleFunction> sysRoleFunctionList = new ArrayList<>(ToolUtils.initialCapacity(functionIds.length));
         for (Integer functionId : functionIds) {
             SysRoleFunction sysRoleFunction = new SysRoleFunction()

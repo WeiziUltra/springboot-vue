@@ -65,6 +65,13 @@
                             {label: '按钮', value: 2}
                         ]
                     },
+                    {
+                        type: 'radio', label: '专属', prop: 'superFlag', required: true,
+                        options: [
+                            {label: '普通', value: 1},
+                            {label: 'vip', value: 2}
+                        ]
+                    },
                     {type: 'textarea', label: '拥有api', prop: 'containApi'},
                     {type: 'input', label: '排序', prop: 'sort', inputType: 'number'},
                     {type: 'textarea', label: '备注', prop: 'description'},

@@ -4,6 +4,8 @@ import com.weiziplus.common.core.datadictionary.DataDictionaryIpManagerService;
 import com.weiziplus.common.models.DataDictionaryValue;
 import com.weiziplus.common.util.PageUtils;
 import com.weiziplus.common.util.ResultUtils;
+import com.weiziplus.common.util.token.AdminTokenUtils;
+import com.weiziplus.pc.common.config.MyGlobalConfig;
 import com.weiziplus.pc.common.interceptor.AdminAuthToken;
 import com.weiziplus.pc.common.interceptor.SysUserLog;
 import io.swagger.annotations.Api;
@@ -12,7 +14,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -46,6 +51,12 @@ public class DataDictionaryIpManagerController {
     })
     @SysUserLog(description = "更新ip规则", type = SysUserLog.TYPE_UPDATE)
     public ResultUtils updateIpFilterRole(String role, String type) {
+        //只有超级管理员才可以操作功能
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        Integer userIdByHttpServletRequest = AdminTokenUtils.getUserIdByHttpServletRequest(request);
+        if (!MyGlobalConfig.SYS_USER_SUPER_ADMIN_ID.equals(userIdByHttpServletRequest)) {
+            return ResultUtils.errorRole("您没有权限");
+        }
         return service.updateIpFilterRole(role, type);
     }
 
