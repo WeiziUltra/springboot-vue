@@ -92,7 +92,6 @@ public class SysUserLogService extends BaseService {
             add(new BaseWhere(SysUserLog.COLUMN_CREATE_TIME, BaseWhere.Where.MORE_THAN.getValue(), startTime));
             add(new BaseWhere(SysUserLog.COLUMN_CREATE_TIME, BaseWhere.Where.LESS_THAN_EQUAL.getValue(), endTime));
         }});
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         ServletOutputStream outputStream = null;
         try {
             outputStream = response.getOutputStream();
