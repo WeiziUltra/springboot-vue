@@ -1,6 +1,7 @@
 package com.weiziplus.common.util;
 
 import com.weiziplus.common.config.GlobalConfig;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -88,7 +89,8 @@ public class FileUtils {
             return null;
         }
         try {
-            return ImageIO.read(file.getInputStream());
+            @Cleanup InputStream inputStream = file.getInputStream();
+            return ImageIO.read(inputStream);
         } catch (IOException e) {
             log.warn("上传的文件不是图片,详情:" + e);
             return null;
@@ -110,14 +112,10 @@ public class FileUtils {
         response.addHeader("Pragma", "no-cache");
         response.setHeader("Content-Disposition", "attachment");
         File file = new File(GlobalConfig.getBaseFilePath() + path);
-        InputStream inputStream = new FileInputStream(file);
-        ServletOutputStream servletOutputStream = response.getOutputStream();
+        @Cleanup InputStream inputStream = new FileInputStream(file);
+        @Cleanup ServletOutputStream servletOutputStream = response.getOutputStream();
         IOUtils.copy(inputStream, servletOutputStream);
         response.flushBuffer();
-        if (null != servletOutputStream) {
-            servletOutputStream.close();
-        }
-        inputStream.close();
     }
 
 }

@@ -7,6 +7,7 @@ import com.weiziplus.common.util.ToolUtils;
 import com.weiziplus.common.util.token.AdminTokenUtils;
 import com.weiziplus.pc.common.config.MyGlobalConfig;
 import com.weiziplus.pc.core.system.vo.LogFileVo;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -130,28 +131,15 @@ public class SysFileService extends BaseService {
         }
         //当前文件
         File file = new File(logPath + File.separator + dir + File.separator + name);
-        InputStream inputStream = null;
-        ServletOutputStream servletOutputStream = null;
         try {
-            inputStream = new FileInputStream(file);
-            servletOutputStream = response.getOutputStream();
+            @Cleanup InputStream inputStream = new FileInputStream(file);
+            @Cleanup ServletOutputStream servletOutputStream = response.getOutputStream();
             IOUtils.copy(inputStream, servletOutputStream);
             response.flushBuffer();
         } catch (Exception e) {
             log.warn("下载日志文件出错，详情:" + e);
             HttpRequestUtils.handleErrorResponse(
                     response, ResultUtils.error("系统错误，请重试。" + e), "下载日志文件出错");
-        } finally {
-            try {
-                if (null != servletOutputStream) {
-                    servletOutputStream.close();
-                }
-                if (null != inputStream) {
-                    inputStream.close();
-                }
-            } catch (IOException e) {
-                log.warn("下载日志文件关闭流出错，详情:" + e);
-            }
         }
     }
 
