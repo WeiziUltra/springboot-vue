@@ -260,19 +260,19 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
         TreeMap<String, String[]> stringTreeMap = new TreeMap<>(request.getParameterMap());
-        Set<String> keySet = stringTreeMap.keySet();
         String signParam = "__sign";
-        if (!keySet.contains(signParam)) {
+        if (!stringTreeMap.containsKey(signParam)) {
             handleResponse(response, ResultUtils.error("签名错误"));
             return false;
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for (String key : keySet) {
+        for (Map.Entry<String, String[]> stringEntry : stringTreeMap.entrySet()) {
+            String key = stringEntry.getKey();
             //跳过__sign参数
             if (signParam.equals(key)) {
                 continue;
             }
-            stringBuilder.append(key).append("=").append(stringTreeMap.get(key)[0]).append("&");
+            stringBuilder.append(key).append("=").append(stringEntry.getValue()[0]).append("&");
         }
         String s = Md5Utils.encodeNotSalt(stringBuilder.substring(0, stringBuilder.length() - 1));
         if (stringTreeMap.get(signParam)[0].equals(s)) {

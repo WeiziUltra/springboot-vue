@@ -725,7 +725,7 @@ public class BaseService {
         if (null == clazz || null == baseWhereList || 0 >= baseWhereList.size()) {
             return null;
         }
-        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.equals(baseWhereList.get(0).getWhere())) {
+        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.getValue().equals(baseWhereList.get(0).getWhere())) {
             log.debug("如果baseWhere数组只有一个的话推荐使用baseFindOneDataByClassAndColumnAndValue");
         }
         String tableName = getTableName(clazz);
@@ -823,7 +823,7 @@ public class BaseService {
         if (null == clazz || null == baseWhereList || 0 >= baseWhereList.size()) {
             return null;
         }
-        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.equals(baseWhereList.get(0).getWhere())) {
+        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.getValue().equals(baseWhereList.get(0).getWhere())) {
             log.debug("如果baseWhere数组只有一个的话推荐使用baseFindOneDataByClassAndColumnAndValue");
         }
         String tableName = getTableName(clazz);
