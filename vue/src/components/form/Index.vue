@@ -27,7 +27,7 @@
                 <!--一行展示一个-->
                 <template v-else>
                     <wei-item :item="item" :formData="formData"
-                              @inputFocus="$emit('inputFocus',{$event,i})"
+                              @inputFocus="$emit('inputFocus',{$event,item})"
                               @selectChange="selectChange"></wei-item>
                 </template>
             </div>
