@@ -26,7 +26,7 @@ public class GlobalExceptionConfig {
      * 是否將异常详情展示给前端
      */
     @Value("${global.response-show-runtime-exception:false}")
-    private final Boolean RESPONSE_SHOW_RUNTIME_EXCEPTION = false;
+    private Boolean responseShowRuntimeException = false;
 
     /**
      * 捕获运行时异常
@@ -38,7 +38,7 @@ public class GlobalExceptionConfig {
     public ResultUtils runtimeExceptionHandler(RuntimeException ex) {
         log.warn("全局异常捕获运行时异常RuntimeException，详情：" + ex);
         errorAsync.saveError(ex, "全局异常捕获运行时异常RuntimeException");
-        if (RESPONSE_SHOW_RUNTIME_EXCEPTION) {
+        if (responseShowRuntimeException) {
             return ResultUtils.errorException("系统异常，详情:" + ex.getMessage());
         } else {
             return ResultUtils.errorException("系统错误，请重试");
@@ -55,7 +55,7 @@ public class GlobalExceptionConfig {
     public ResultUtils exceptionHandler(Exception ex) {
         log.warn("全局异常捕获所有异常Exception，详情：" + ex);
         errorAsync.saveError(ex, "全局异常捕获所有异常Exception");
-        if (RESPONSE_SHOW_RUNTIME_EXCEPTION) {
+        if (responseShowRuntimeException) {
             return ResultUtils.errorException("系统异常，详情:" + ex.getMessage());
         } else {
             return ResultUtils.errorException("系统错误，请重试");

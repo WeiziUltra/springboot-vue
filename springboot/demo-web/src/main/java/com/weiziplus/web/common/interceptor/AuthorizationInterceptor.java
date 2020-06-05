@@ -39,7 +39,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
      * 是否检验时间戳
      */
     @Value("${global.check-timeStamp:true}")
-    private final Boolean CHECK_TIMESTAMP = true;
+    private Boolean checkTimestamp = true;
 
     /**
      * 配置忽略的url
@@ -153,7 +153,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             return true;
         }
         //开启时间戳校验
-        if (CHECK_TIMESTAMP) {
+        if (checkTimestamp) {
             //判断时间戳有效
             if (!handleTimeStamp(request)) {
                 handleResponse(response, ResultUtils.error("时间戳错误"));
