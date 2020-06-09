@@ -293,7 +293,7 @@
                             method: 'post',
                             data: {
                                 id,
-                                password: value
+                                password: that.$cryptoJS.md5(value)
                             },
                             success() {
                                 that.$globalFun.successMsg('密码重置成功');

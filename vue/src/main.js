@@ -20,9 +20,13 @@ Vue.prototype.$axiosDown = weiAxiosDown;
 /**引入全局变量和方法*/
 import globalVariable from './utils/global_variable'
 import globalFunction from './utils/global_function'
+import cryptoJS from './utils/cryptoJS'
+import jsEncrypt from './utils/jsEncrypt'
 
 Vue.prototype.$global = globalVariable;
 Vue.prototype.$globalFun = globalFunction;
+Vue.prototype.$cryptoJS = cryptoJS;
+Vue.prototype.$jsEncrypt = jsEncrypt;
 
 new Vue({
     router,

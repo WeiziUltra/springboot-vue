@@ -96,7 +96,7 @@
                     method: 'post',
                     data: {
                         username, code, uuid,
-                        password: that.$globalFun.md5(password)
+                        password: that.$cryptoJS.md5(password)
                     },
                     success(res) {
                         that.loginLoading = false;

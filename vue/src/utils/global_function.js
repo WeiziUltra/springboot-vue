@@ -1,13 +1,5 @@
 /**引入element-ui组件*/
 import {Message, MessageBox, prompt} from 'element-ui';
-/*引入AES加密*/
-import CryptoJs from "crypto-js";
-/*引入jsencrypt*/
-import JsEncrypt from 'jsencrypt';
-
-//某种程度上加混淆
-let {enc, mode, pad} = CryptoJs;
-let A_E_S = CryptoJs['AES'];
 
 /**
  * 判断是否为空
@@ -57,18 +49,6 @@ function successMsg(msg = '成功', time = 3000) {
         duration: time
     });
 }
-
-/////////////////////////////////
-//ASE秘钥
-
-function getA_E_S() {
-    return {
-        _k: 'WEIZI',
-        _v: 'PLUS'
-    }
-}
-
-let {_k, _v} = getA_E_S();
 
 /**
  * 对话框
@@ -260,101 +240,6 @@ function getNowDate() {
 }
 
 /**
- * AES加密
- * @param word
- * @returns {string}
- */
-function a_e_sEncrypt(word) {
-    if (null == word) {
-        return null;
-    }
-    let {Utf8} = enc;
-    // aes加密，秘钥和偏移
-    const KEY = Utf8.parse(_k);
-    const IV = Utf8.parse(_v);
-    let srcs = Utf8.parse(word);
-    let encrypted = A_E_S.encrypt(srcs, KEY, {
-        iv: IV,
-        mode: mode.CBC,
-        padding: pad.Pkcs7
-    });
-    return encrypted.ciphertext.toString().toUpperCase();
-}
-
-/**
- * AES解密
- */
-function a_e_sDecrypt(word) {
-    if (null == word) {
-        return null;
-    }
-    let {Utf8, Base64} = enc;
-    // aes加密，秘钥和偏移
-    const KEY = Utf8.parse(_k);
-    const IV = Utf8.parse(_v);
-    let encryptedHexStr = enc.Hex.parse(word);
-    let srcs = Base64.stringify(encryptedHexStr);
-    let decrypt = A_E_S.decrypt(srcs, KEY, {
-        iv: IV,
-        mode: mode.CBC,
-        padding: pad.Pkcs7
-    });
-    let decryptedStr = decrypt.toString(Utf8);
-    return decryptedStr.toString();
-}
-
-/**
- * base64加密
- * @param word
- * @returns {string}
- */
-function base64Encrypt(word) {
-    if (null == word) {
-        return null;
-    }
-    let wordArray = CryptoJs.enc.Utf8.parse(word);
-    return CryptoJs.enc.Base64.stringify(wordArray);
-}
-
-/**
- * base64解密
- * @param wordArray
- * @returns {*}
- */
-function base64Decrypt(wordArray) {
-    if (null == wordArray) {
-        return null;
-    }
-    let parsedWordArray = CryptoJs.enc.Base64.parse(wordArray);
-    return parsedWordArray.toString(CryptoJs.enc.Utf8);
-}
-
-/**
- * md5加密
- * @param str
- * @returns {*}
- */
-function md5(str) {
-    if (null == str) {
-        return null;
-    }
-    str = `weiziplus-${str}`;
-    return CryptoJs.MD5(str).toString().toUpperCase();
-}
-
-/**
- * md5加密没有加密盐
- * @param str
- * @returns {*}
- */
-function md5NoSalt(str) {
-    if (null == str) {
-        return null;
-    }
-    return CryptoJs.MD5(str).toString().toUpperCase();
-}
-
-/**
  * 获取session存储的数据
  * @param key
  * @returns {*}
@@ -429,20 +314,6 @@ function sortAscii(obj) {
 }
 
 /**
- * rsa公钥加密
- * @param key
- * @param obj
- * @returns {PromiseLike<ArrayBuffer> | *}
- */
-function rsaPublicEncrypt(key, obj) {
-    let encrypt = new JsEncrypt();
-    //设置加密公钥
-    encrypt.setPublicKey(key);
-    //返回通过encryptLong方法加密后的结果
-    return encrypt.encrypt(obj);
-}
-
-/**
  * 将方法暴露出去
  */
 export default {
@@ -457,16 +328,9 @@ export default {
     reverse,
     timestampFormat,
     getNowDate,
-    a_e_sEncrypt,
-    a_e_sDecrypt,
-    base64Encrypt,
-    base64Decrypt,
-    md5,
-    md5NoSalt,
     getSessionStorage,
     setSessionStorage,
     getLocationStorage,
     setLocationStorage,
     sortAscii,
-    rsaPublicEncrypt
 };

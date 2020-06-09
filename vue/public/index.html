@@ -9,6 +9,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>WeiziPlus</title>
+    <!--CDN引入CryptoJS-->
+    <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script>window.CryptoJS || document.write('<script src="<%= BASE_URL %>cdn/crypto-js-4.0.0.min.js"><\/script>')</script>
     <% if(process.env.NODE_ENV === 'production'){ %>
     <!--CDN引入Vue后，element-ui才可以CDN引入-->
     <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
@@ -22,9 +25,6 @@
     <!--CDN引入vuex，减少打包体积-->
     <script src="https://cdn.bootcss.com/vuex/3.2.0/vuex.min.js"></script>
     <script>window.Vuex || document.write('<script src="<%= BASE_URL %>cdn/vuex-3.2.0.min.js"><\/script>')</script>
-    <!--CDN引入axios，减少打包体积-->
-    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.min.js"></script>
-    <script>window.axios || document.write('<script src="<%= BASE_URL %>cdn/axios-0.19.2.min.js"><\/script>')</script>
     <% } %>
 </head>
 <body>

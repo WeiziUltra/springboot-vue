@@ -56,8 +56,8 @@
                     url: that.$global.URL.system.sysUser.updatePwd,
                     method: 'post',
                     data: {
-                        oldPwd: that.$globalFun.md5(oldPwd),
-                        newPwd: that.$globalFun.md5(newPwd),
+                        oldPwd: that.$cryptoJS.md5(oldPwd),
+                        newPwd: that.$cryptoJS.md5(newPwd),
                     },
                     success() {
                         that.$globalFun.successMsg('成功');

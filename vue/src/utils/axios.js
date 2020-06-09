@@ -112,7 +112,7 @@ export function weiAxios(
                 data[key] = urlParamMap[key];
             }
             let asciiStr = that.$globalFun.sortAscii(data);
-            data['__sign'] = that.$globalFun.md5NoSalt(asciiStr);
+            data['__sign'] = that.$cryptoJS.md5NoSalt(asciiStr);
         }
         /**axios请求处理不同请求方式时的参数*/
         method = method.toUpperCase();
@@ -233,7 +233,7 @@ export function weiAxiosDown(
                 data[key] = urlParamMap[key];
             }
             let asciiStr = that.$globalFun.sortAscii(data);
-            data['__sign'] = that.$globalFun.md5NoSalt(asciiStr);
+            data['__sign'] = that.$cryptoJS.md5NoSalt(asciiStr);
         }
         /**axios请求处理不同请求方式时的参数*/
         method = method.toUpperCase();

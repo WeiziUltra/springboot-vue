@@ -69,7 +69,7 @@
                     this.$globalFun.errorMsg('密码不能少于6位');
                     return;
                 }
-                form['password'] = this.$globalFun.md5(form['password']);
+                form['password'] = this.$cryptoJS.md5(form['password']);
                 that.$axios({
                     url: that.$global.URL.system.sysUser[that.editType],
                     method: 'post',
