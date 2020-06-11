@@ -36,7 +36,7 @@ public class SysRoleController {
     })
     @GetMapping("/getPageList")
     @SysUserLog(description = "获取系统角色分页数据")
-    public ResultUtils<PageUtils<List<SysRole>>> getPageList(
+    public ResultUtils<PageUtils<SysRole>> getPageList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             String search) {

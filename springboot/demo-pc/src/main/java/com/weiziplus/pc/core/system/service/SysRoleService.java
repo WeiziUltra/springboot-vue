@@ -2,7 +2,6 @@ package com.weiziplus.pc.core.system.service;
 
 import com.github.pagehelper.PageHelper;
 import com.weiziplus.common.base.BaseService;
-import com.weiziplus.common.base.BaseWhere;
 import com.weiziplus.common.models.SysFunction;
 import com.weiziplus.common.models.SysRole;
 import com.weiziplus.common.models.SysRoleFunction;
@@ -46,18 +45,18 @@ public class SysRoleService extends BaseService {
      * @param search
      * @return
      */
-    public ResultUtils<PageUtils<List<SysRole>>> getPageList(Integer pageNum, Integer pageSize, String search) {
+    public ResultUtils<PageUtils<SysRole>> getPageList(Integer pageNum, Integer pageSize, String search) {
         String redisKey = createRedisKey(REDIS_KEY + "getPageList:", pageNum, pageSize, search);
         Object object = RedisUtils.get(redisKey);
         if (null != object) {
             List<SysRole> sysFunctionList = ToolUtils.objectOfList(object, SysRole.class);
-            PageUtils<List<SysRole>> pageUtil = PageUtils.pageInfo(sysFunctionList);
+            PageUtils<SysRole> pageUtil = PageUtils.pageInfo(sysFunctionList);
             return ResultUtils.success(pageUtil);
         }
         PageHelper.startPage(pageNum, pageSize);
         List<SysRole> sysRoleList = mapper.getList(search);
         RedisUtils.set(redisKey, sysRoleList);
-        PageUtils<List<SysRole>> pageUtil = PageUtils.pageInfo(sysRoleList);
+        PageUtils<SysRole> pageUtil = PageUtils.pageInfo(sysRoleList);
         return ResultUtils.success(pageUtil);
     }
 

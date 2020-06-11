@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * @author wanglongwei
  * @date 2020/06/01 09/53
@@ -39,12 +37,12 @@ public class UserLogService extends BaseService {
      * @param createTimeSort
      * @return
      */
-    public ResultUtils<PageUtils<List<UserLogVo>>> getPageList(Integer pageNum, Integer pageSize, String username, Integer type, String description, String ipAddress, String borderName, String osName, String startTime, String endTime, String createTimeSort) {
+    public ResultUtils<PageUtils<UserLogVo>> getPageList(Integer pageNum, Integer pageSize, String username, Integer type, String description, String ipAddress, String borderName, String osName, String startTime, String endTime, String createTimeSort) {
         if (!OrderByType.contains(createTimeSort)) {
             return ResultUtils.error("排序字段错误");
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageUtils<List<UserLogVo>> pageUtil = PageUtils.pageInfo(mapper.getListVo(
+        PageUtils<UserLogVo> pageUtil = PageUtils.pageInfo(mapper.getListVo(
                 username, type, description, ipAddress, borderName, osName, startTime, endTime,
                 createTimeSort));
         return ResultUtils.success(pageUtil);

@@ -1,6 +1,5 @@
 package com.weiziplus.pc.core.system.service;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.weiziplus.common.base.BaseService;
 import com.weiziplus.common.models.SysFunction;
@@ -44,12 +43,12 @@ public class SysFunctionService extends BaseService {
      * @param pageSize
      * @return
      */
-    public ResultUtils<PageUtils<List<SysFunction>>> getPageList(Integer pageNum, Integer pageSize) {
+    public ResultUtils<PageUtils<SysFunction>> getPageList(Integer pageNum, Integer pageSize) {
         String redisKey = createRedisKey(REDIS_KEY + "getPageList:", pageNum, pageSize);
         Object object = RedisUtils.get(redisKey);
         if (null != object) {
             List<SysFunction> sysFunctionList = ToolUtils.objectOfList(object, SysFunction.class);
-            PageUtils<List<SysFunction>> pageUtil = PageUtils.pageInfo(sysFunctionList);
+            PageUtils<SysFunction> pageUtil = PageUtils.pageInfo(sysFunctionList);
             return ResultUtils.success(pageUtil);
         }
         Integer minParentId = mapper.getMinParentId();
@@ -61,7 +60,7 @@ public class SysFunctionService extends BaseService {
             sysFunction.setChildren(childrenListByParentId);
         }
         RedisUtils.set(redisKey, functionListByParentId);
-        PageUtils<List<SysFunction>> pageUtil = PageUtils.pageInfo(functionListByParentId);
+        PageUtils<SysFunction> pageUtil = PageUtils.pageInfo(functionListByParentId);
         return ResultUtils.success(pageUtil);
     }
 

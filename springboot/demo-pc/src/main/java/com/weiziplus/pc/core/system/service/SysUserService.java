@@ -52,7 +52,7 @@ public class SysUserService extends BaseService {
      * @param createTimeSort
      * @return
      */
-    public ResultUtils<PageUtils<List<SysUserVo>>> getPageList(Integer pageNum, Integer pageSize
+    public ResultUtils<PageUtils<SysUserVo>> getPageList(Integer pageNum, Integer pageSize
             , String username, Integer roleId, Integer status, String lastActiveTime, String createTime
             , String lastActiveTimeSort, String createTimeSort) {
         if (!OrderByType.contains(lastActiveTimeSort)
@@ -60,7 +60,7 @@ public class SysUserService extends BaseService {
             return ResultUtils.error("排序类型错误");
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageUtils<List<SysUserVo>> pageUtil = PageUtils.pageInfo(mapper.getListVo(
+        PageUtils<SysUserVo> pageUtil = PageUtils.pageInfo(mapper.getListVo(
                 username, roleId, status, lastActiveTime, createTime,
                 lastActiveTimeSort, createTimeSort));
         return ResultUtils.success(pageUtil);

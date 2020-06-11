@@ -5,24 +5,18 @@ import com.weiziplus.common.base.BaseService;
 import com.weiziplus.common.base.BaseWhere;
 import com.weiziplus.common.models.DataDictionary;
 import com.weiziplus.common.models.DataDictionaryValue;
-import com.weiziplus.common.models.SysError;
 import com.weiziplus.common.util.DateUtils;
 import com.weiziplus.common.util.PageUtils;
 import com.weiziplus.common.util.ResultUtils;
 import com.weiziplus.common.util.ToolUtils;
 import com.weiziplus.common.util.redis.RedisUtils;
-import com.weiziplus.common.util.token.AdminTokenUtils;
-import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -404,7 +398,7 @@ public class DataDictionaryIpManagerService extends BaseService {
      * @param search
      * @return
      */
-    public ResultUtils<PageUtils<List<DataDictionaryValue>>> getIpFilterList(Integer pageNum, Integer pageSize, String terminal, String search) {
+    public ResultUtils<PageUtils<DataDictionaryValue>> getIpFilterList(Integer pageNum, Integer pageSize, String terminal, String search) {
         if (ToolUtils.isBlank(terminal)) {
             return ResultUtils.error("终端不能为空");
         }
@@ -415,7 +409,7 @@ public class DataDictionaryIpManagerService extends BaseService {
         }
         PageHelper.startPage(pageNum, pageSize);
         List<DataDictionaryValue> ipListByTerminal = mapper.getIpListByTerminal(terminal, search);
-        PageUtils<List<DataDictionaryValue>> pageUtil = PageUtils.pageInfo(ipListByTerminal);
+        PageUtils<DataDictionaryValue> pageUtil = PageUtils.pageInfo(ipListByTerminal);
         return ResultUtils.success(pageUtil);
     }
 

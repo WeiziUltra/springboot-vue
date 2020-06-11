@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @author wanglongwei
  * @date 2020/06/01 09/53
@@ -47,7 +45,7 @@ public class UserLogController {
     })
     @GetMapping("/getPageList")
     @SysUserLog(description = "获取系统用户日志分页数据")
-    public ResultUtils<PageUtils<List<UserLogVo>>> getPageList(
+    public ResultUtils<PageUtils<UserLogVo>> getPageList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             String username, Integer type, String description, String ipAddress,

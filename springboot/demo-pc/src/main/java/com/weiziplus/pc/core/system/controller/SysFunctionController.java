@@ -35,7 +35,7 @@ public class SysFunctionController {
     })
     @GetMapping("/getPageList")
     @SysUserLog(description = "获取系统功能分页数据")
-    public ResultUtils<PageUtils<List<SysFunction>>> getPageList(
+    public ResultUtils<PageUtils<SysFunction>> getPageList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
         return service.getPageList(pageNum, pageSize);

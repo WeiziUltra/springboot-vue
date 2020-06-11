@@ -18,7 +18,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author wanglongwei
@@ -69,7 +68,7 @@ public class DataDictionaryIpManagerController {
             @ApiImplicitParam(name = "search", value = "搜索", dataType = "String", paramType = "query"),
     })
     @SysUserLog(description = "查看ip过滤名单")
-    public ResultUtils<PageUtils<List<DataDictionaryValue>>> getIpFilterList(
+    public ResultUtils<PageUtils<DataDictionaryValue>> getIpFilterList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             String terminal, String search) {

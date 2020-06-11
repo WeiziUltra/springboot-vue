@@ -59,7 +59,7 @@ public class SysUserLogService extends BaseService {
      * @param createTimeSort
      * @return
      */
-    public ResultUtils<PageUtils<List<SysUserLogVo>>> getPageList(Integer pageNum, Integer pageSize
+    public ResultUtils<PageUtils<SysUserLogVo>> getPageList(Integer pageNum, Integer pageSize
             , String username, String realName, Integer type, String description, String ipAddress
             , String borderName, String osName, String startTime, String endTime
             , String createTimeSort) {
@@ -67,7 +67,7 @@ public class SysUserLogService extends BaseService {
             return ResultUtils.error("排序字段错误");
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageUtils<List<SysUserLogVo>> pageUtil = PageUtils.pageInfo(mapper.getListVo(
+        PageUtils<SysUserLogVo> pageUtil = PageUtils.pageInfo(mapper.getListVo(
                 username, realName, type, description, ipAddress, borderName, osName, startTime, endTime,
                 createTimeSort));
         return ResultUtils.success(pageUtil);

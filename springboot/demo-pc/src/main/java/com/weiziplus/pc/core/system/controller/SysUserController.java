@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 /**
  * @author wanglongwei
  * @date 2020/05/28 09/25
@@ -44,7 +42,7 @@ public class SysUserController {
     })
     @GetMapping("/getPageList")
     @SysUserLog(description = "获取系统用户分页数据")
-    public ResultUtils<PageUtils<List<SysUserVo>>> getPageList(
+    public ResultUtils<PageUtils<SysUserVo>> getPageList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             String username, Integer roleId, Integer status, String lastActiveTime, String createTime,

@@ -13,8 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author wanglongwei
  * @date 2020/05/29 15/50
@@ -37,7 +35,7 @@ public class SysErrorController {
     })
     @GetMapping("/getPageList")
     @SysUserLog(description = "获取系统异常分页数据")
-    public ResultUtils<PageUtils<List<SysError>>> getPageList(
+    public ResultUtils<PageUtils<SysError>> getPageList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             String search,

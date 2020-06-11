@@ -13,8 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author wanglongwei
  * @date 2020/05/29 15/41
@@ -45,7 +43,7 @@ public class SysUserLogController {
     })
     @GetMapping("/getPageList")
     @SysUserLog(description = "获取系统用户日志分页数据")
-    public ResultUtils<PageUtils<List<SysUserLogVo>>> getPageList(
+    public ResultUtils<PageUtils<SysUserLogVo>> getPageList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             String username, String realName, Integer type, String description, String ipAddress,

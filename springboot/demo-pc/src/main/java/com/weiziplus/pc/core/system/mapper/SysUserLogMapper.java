@@ -1,6 +1,6 @@
 package com.weiziplus.pc.core.system.mapper;
 
-import com.weiziplus.common.models.SysUserLog;
+import com.weiziplus.pc.core.system.vo.SysUserLogVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,7 +28,7 @@ public interface SysUserLogMapper {
      * @param createTimeSort
      * @return
      */
-    List<SysUserLog> getListVo(@Param("username") String username, @Param("realName") String realName
+    List<SysUserLogVo> getListVo(@Param("username") String username, @Param("realName") String realName
             , @Param("type") Integer type, @Param("description") String description, @Param("ipAddress") String ipAddress
             , @Param("borderName") String borderName, @Param("osName") String osName, @Param("startTime") String startTime
             , @Param("endTime") String endTime
