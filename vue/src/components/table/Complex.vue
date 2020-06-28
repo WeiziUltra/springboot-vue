@@ -569,7 +569,7 @@
                 let {url} = this.tableDataRequest;
                 let {id} = this.$globalFun.getSessionStorage('userInfo');
                 let href = window.location.href;
-                return this.$globalFun.md5(`${href}-${url}-${id}`);
+                return this.$cryptoJS.md5(`${href}-${url}-${id}`);
             },
             //表格行被点击
             cellClick(row, column, cell, event) {
