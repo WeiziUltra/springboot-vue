@@ -42,7 +42,7 @@
                                 <template v-if="'tag' === column.type">
                                     <el-tag :type="column.element(scope.row)['type'] || ''"
                                             :size="column.element(scope.row)['size'] || 'medium'"
-                                            :effect="column.element(scope.row)['effect'] || 'light'">
+                                            :effect="column.element(scope.row)['effect'] || 'dark'">
                                         {{column.element(scope.row)['content'] || scope.row[column.prop]}}
                                     </el-tag>
                                 </template>
@@ -251,7 +251,7 @@
                     return;
                 }
                 if (this.$globalFun.isBlank(property)) {
-                    console.warn(`未找到property字段，请检查 tableColumns 中prop字段设置`);
+                    console.warn(`未找到property字段，请检查 tableColumns 中prop字段设置,如果不需要表格行点击事件，请忽略该提示`);
                 }
                 this.$emit('cellClick', {row, column: column['property'], cell, event});
             }
@@ -286,6 +286,11 @@
 
         /*表格树形结构，箭头错位*/
         .el-table table tbody tr td:nth-child(3) .cell.el-tooltip {
+            display: flex;
+        }
+
+        /*表格树形结构，箭头错位*/
+        .el-table table tbody tr td:nth-child(2) .cell.el-tooltip {
             display: flex;
         }
 

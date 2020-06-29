@@ -25,27 +25,55 @@
 <script>
     export default {
         name: "LogFile",
+        props: {
+            //类型
+            type: {
+                type: String
+            },
+            //是否展示
+            isShow: {
+                type: Boolean,
+                default: true
+            }
+        },
         data() {
             return {
                 fileList: []
             }
         },
+        watch: {
+            type() {
+                this.getFile();
+            },
+            isShow() {
+                this.getFile();
+            }
+        },
         mounted() {
-            let that = this;
-            this.$axios({
-                url: that.$global.URL.system.sysFile.getLogFile,
-                success(data) {
-                    if (null == data) {
-                        return;
-                    }
-                    data.sort((a, b) => {
-                        return a.name < b.name ? 1 : -1;
-                    });
-                    that.fileList = data;
-                }
-            })
+            this.getFile();
         },
         methods: {
+            getFile() {
+                if (!this.isShow) {
+                    return;
+                }
+                let that = this;
+                this.$axios({
+                    url: that.$global.URL.system.sysFile.getLogFile,
+                    data: {
+                        type: that.type
+                    },
+                    success(data) {
+                        if (null == data) {
+                            return;
+                        }
+                        data.sort((a, b) => {
+                            return a.name < b.name ? 1 : -1;
+                        });
+                        that.fileList = data;
+                    }
+                })
+            },
             /**
              * 下载
              * @param row
@@ -61,9 +89,10 @@
                             url: that.$global.URL.system.sysFile.downLogFile,
                             data: {
                                 dir: item.name,
-                                name: name
+                                name: name,
+                                type: that.type
                             },
-                            filename: name
+                            filename: `${that.type}---${name}`
                         });
                     }
                 });

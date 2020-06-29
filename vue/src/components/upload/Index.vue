@@ -3,7 +3,6 @@
         <el-upload
                 ref="upload"
                 :action="$global.GLOBAL.base_url + action"
-                :headers="headers"
                 :multiple="multiple"
                 :show-file-list="showFileList"
                 :on-preview="onPreview"
@@ -42,15 +41,10 @@
             action: {
                 type: String
             },
-            //设置请求头
-            headers: {
+            //额外参数
+            data: {
                 type: Object,
-                default() {
-                    let res = {};
-                    let token = this.$globalFun.getSessionStorage(`token`);
-                    let tokenHeader = this.$global.GLOBAL.token;
-                    res[tokenHeader] = token || '';
-                    return res;
+                default: () => {
                 }
             },
             //是否支持多文件上传
@@ -281,21 +275,16 @@
                 let that = this;
                 let formData = new FormData();
                 formData.append('file', item['file']);
+                for (let key in that.data) {
+                    if (!that.data.hasOwnProperty(key)) {
+                        continue;
+                    }
+                    formData.append(key, that.data[key]);
+                }
                 let headers = {
                     'Content-Type': 'multipart/form-data'
                 };
-                let url = that.$global.GLOBAL.base_url + that.action;
-                //如果请求没有__t时间戳参数
-                if (!url.includes('?__t=') && !url.includes('&__t=')) {
-                    let prefix = that.$global.GLOBAL.base_url + "?";
-                    //有参数
-                    if (0 === url.indexOf(prefix)) {
-                        url += `&__t=${new Date().getTime()}`;
-                    } else {
-                        //无参数
-                        url += `?__t=${new Date().getTime()}`;
-                    }
-                }
+                let url = `${that.$global.GLOBAL.base_url}${that.action}?__t=${new Date().getTime()}`;
                 //每个请求加上请求头
                 headers[that.$global.GLOBAL.token] = that.$globalFun.getSessionStorage('token') || '';
                 axios({

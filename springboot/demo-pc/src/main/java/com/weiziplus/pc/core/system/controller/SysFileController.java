@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,20 +30,40 @@ public class SysFileController {
 
     @ApiOperation(value = "获取日志文件")
     @GetMapping("/getLogFile")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type", value = "类型", required = true, dataType = "String", paramType = "query"),
+    })
     @SysUserLog(description = "获取日志文件")
-    public ResultUtils<List<LogFileVo>> getLogFile() {
-        return service.getLogFile();
+    public ResultUtils<List<LogFileVo>> getLogFile(String type) {
+        return service.getLogFile(type);
     }
 
     @ApiOperation(value = "下载日志文件")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "dir", value = "目录", required = true, dataType = "String", paramType = "form"),
             @ApiImplicitParam(name = "name", value = "文件名", required = true, dataType = "String", paramType = "form"),
+            @ApiImplicitParam(name = "type", value = "类型", required = true, dataType = "String", paramType = "form"),
     })
     @PostMapping("/downLogFile")
     @SysUserLog(description = "下载日志文件")
-    public void downLogFile(String dir, String name) {
-        service.downLogFile(dir, name);
+    public void downLogFile(String dir, String name, String type) {
+        service.downLogFile(dir, name, type);
+    }
+
+    @ApiOperation(value = "获取常用文件")
+    @GetMapping("/getFile")
+    @SysUserLog(description = "获取常用文件")
+    public ResultUtils<List<LogFileVo>> getFile() {
+        return service.getFile();
+    }
+
+    @ApiOperation(value = "更新常用文件")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "url", value = "文件url", required = true, dataType = "String", paramType = "query"),
+    })
+    @PostMapping("/uploadFile")
+    public ResultUtils uploadFile(MultipartFile file, String url) {
+        return service.uploadFile(file, url);
     }
 
 }

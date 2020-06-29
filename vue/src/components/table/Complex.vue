@@ -111,7 +111,7 @@
                                 <template v-if="'tag' === column.type">
                                     <el-tag :type="column.element(scope.row)['type'] || ''"
                                             :size="column.element(scope.row)['size'] || 'medium'"
-                                            :effect="column.element(scope.row)['effect'] || 'light'">
+                                            :effect="column.element(scope.row)['effect'] || 'dark'">
                                         {{column.element(scope.row)['content'] || scope.row[column.prop]}}
                                     </el-tag>
                                 </template>

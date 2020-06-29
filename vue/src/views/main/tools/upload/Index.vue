@@ -2,6 +2,7 @@
     <div id="index">
         <!--文件上传,必须绑定 action 和 fileList ,具体属性参考 /src/components/upload/Index.vue-->
         <wei-upload :action="$global.URL.tools.upload" :limit="3"
+                    :data="{param1:1,param2:666}"
                     :fileList.sync="fileList"></wei-upload>
         <el-button type="primary" @click="showFileList">当前的文件列表</el-button>
         <el-button type="success" @click="downTemp">文件下载</el-button>

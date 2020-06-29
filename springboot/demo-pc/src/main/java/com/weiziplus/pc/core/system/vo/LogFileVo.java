@@ -27,6 +27,9 @@ public class LogFileVo {
     @ApiModelProperty("文件大小")
     private Long length;
 
+    @ApiModelProperty("文件路径")
+    private String url;
+
     @ApiModelProperty("子文件")
     private List<LogFileVo> children;
 

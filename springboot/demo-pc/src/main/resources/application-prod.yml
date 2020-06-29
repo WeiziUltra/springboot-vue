@@ -16,7 +16,9 @@ knife4j:
 #自定义全局变量*******注意:  :后面要有空格
 global:
   #日志文件存放路径
-  log-path: /home/project/muteki/springboot/logs
+  log-path:
+    pc: /home/project/muteki/springboot/pc/logs
+    web: /home/project/muteki/springboot/web/logs
   #图片存放路径--本地项目运行的target目录
   base-file-path: /home/project/muteki/springboot/static
   #允许跨域地址(访问的浏览器的Origin,不设置默认*)---多个地址用,(英文逗号)分隔开---可精确到端口号

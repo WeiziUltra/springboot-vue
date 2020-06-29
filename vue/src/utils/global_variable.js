@@ -115,6 +115,10 @@ const URL = {
             getLogFile: '/sysFile/getLogFile',
             /*下载日志文件*/
             downLogFile: '/sysFile/downLogFile',
+            /*获取常用文件*/
+            getFile: '/sysFile/getFile',
+            /*更新常用文件*/
+            uploadFile: '/sysFile/uploadFile',
         },
     },
     /*************字典管理*****************/

@@ -1,7 +1,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
     <contextName>logback</contextName>
     <!--yml配置文件中路径-->
-    <springProperty scope="context" name="log.path" source="global.log-path"/>
+    <springProperty scope="context" name="log.path" source="global.log-path.pc"/>
 
     <!-- 日志格式和颜色渲染 -->
     <!-- 彩色日志依赖的渲染类 -->
