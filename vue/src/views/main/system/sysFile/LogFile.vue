@@ -1,5 +1,5 @@
 <template>
-    <div id="index">
+    <div id="index" style="height: 80vh;overflow-y: scroll;">
         <el-timeline>
             <template v-for="item in fileList">
                 <el-timeline-item placement="top"
