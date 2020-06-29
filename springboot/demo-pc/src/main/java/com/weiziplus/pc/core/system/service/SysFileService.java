@@ -41,7 +41,7 @@ public class SysFileService extends BaseService {
     /**
      * web日志存放路径
      */
-    @Value("${global.log-path.web}")
+    @Value("${global.log-path.web:}")
     private String webLogPath = "";
 
     /**
