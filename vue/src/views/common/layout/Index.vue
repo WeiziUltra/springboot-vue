@@ -12,8 +12,8 @@
             <div class="footer">
                 <span>Copyright ©{{nowYear}}</span>
                 <el-link class="link" type="primary" target="_blank"
-                         href="https://github.com/WeiziPlus/springboot2-vue3">
-                    WeiziPlus-GitHub
+                         href="https://gitee.com/WeiziPlus/springboot-vue">
+                    WeiziPlus-Gitee
                 </el-link>
             </div>
         </div>
