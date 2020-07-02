@@ -60,9 +60,9 @@
                     data: {}
                 },
                 tableColumns: [
-                    {label: '用户名', prop: 'username', fixed: 'left'},
+                    {label: '用户名', prop: 'username', showOverflowTooltip: true, fixed: 'left'},
                     {label: '真实姓名', prop: 'realName', fixed: 'left'},
-                    {label: '请求路径', prop: 'url'},
+                    {label: '请求路径', prop: 'url', showOverflowTooltip: true},
                     {
                         label: '类型', type: 'tag',
                         element({type}) {
@@ -79,8 +79,8 @@
                             }
                         }
                     },
-                    {label: '参数', prop: 'param'},
-                    {label: '操作', prop: 'description'},
+                    {label: '参数', prop: 'param', showOverflowTooltip: true},
+                    {label: '操作', prop: 'description', showOverflowTooltip: true},
                     {label: 'ip地址', prop: 'ipAddress'},
                     {label: '浏览器', prop: 'borderName'},
                     {label: '操作系统', prop: 'osName'},
@@ -90,6 +90,7 @@
                         width: 120,
                         sortable: 'custom',
                         type: 'icon',
+                        showOverflowTooltip: true,
                         element(row) {
                             return {
                                 leftIcon: 'el-icon-time',

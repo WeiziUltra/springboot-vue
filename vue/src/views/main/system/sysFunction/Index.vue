@@ -42,13 +42,13 @@
                 },
                 tableColumns: [
                     {label: '标题', prop: 'title', className: 'tree', width: 127},
-                    {label: 'name', prop: 'name'},
+                    {label: 'name', prop: 'name', showOverflowTooltip: true},
                     {
                         label: '图标', prop: 'icon', formatter(row) {
                             return `<i class="${row.icon}"></i>`;
                         }
                     },
-                    {label: '路径', prop: 'path'},
+                    {label: '路径', prop: 'path', showOverflowTooltip: true},
                     {
                         label: '类型', type: 'tag',
                         element({type}) {
@@ -78,7 +78,7 @@
                         }
                     },
                     {label: '排序', prop: 'sort'},
-                    {label: '拥有api', prop: 'containApi'},
+                    {label: '拥有api', prop: 'containApi', showOverflowTooltip: true},
                     {
                         label: '创建时间',
                         prop: 'createTime',

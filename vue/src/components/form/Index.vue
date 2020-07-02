@@ -3,8 +3,8 @@
         <el-form ref="form" size="mini" :label-width="labelWidth"
                  :model="formData || {}" :rules="formRules || {}">
             <slot name="itemHead" :formData="formData"></slot>
-            <div v-for="item in formOptions" :key="item.prop"
-                 v-if="!item['hidden']">
+            <template v-for="item in formOptions"
+                      v-if="!item['hidden']">
                 <!--一行展示多个-->
                 <template v-if="null != item.items && 0 < item.items.length">
                     <div style="display: flex;">
@@ -30,7 +30,7 @@
                               @inputFocus="$emit('inputFocus',{$event,item})"
                               @selectChange="selectChange"></wei-item>
                 </template>
-            </div>
+            </template>
             <slot name="itemTail" :formData="formData"></slot>
         </el-form>
         <div v-if="showFooterButton" slot="footer">

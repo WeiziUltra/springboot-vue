@@ -207,7 +207,7 @@ public class SysFileService extends BaseService {
             return ResultUtils.errorRole("只有超级管理员才可以查看常用文件");
         }
         //常用文件存放名字
-        String mkdirName = "file";
+        String mkdirName = "template";
         //日志文件夹
         File baseFile = new File(GlobalConfig.getBaseFilePath() + File.separator + mkdirName);
         //获取文件夹下所有文件

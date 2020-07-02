@@ -8,33 +8,33 @@
                         <template v-if="'input' === item.type">
                             <el-input v-model="tableDataRequest.data[item.prop]" :type="item.inputType || 'text'"
                                       :placeholder="item.placeholder" clearable
-                                      :disabled="item.disabled || false"></el-input>
+                                      :disabled="item.disabled"></el-input>
                         </template>
                         <template v-else-if="'select' === item.type">
                             <el-select v-model="tableDataRequest.data[item.prop]"
-                                       clearable filterable :disabled="item.disabled || false"
+                                       clearable filterable :disabled="item.disabled"
                                        :placeholder="item.placeholder || '请选择'">
                                 <el-option v-for="option in item.options" :key="option.value"
                                            :label="option.label" :value="option.value"
-                                           :disabled="option.disabled || false"></el-option>
+                                           :disabled="option.disabled"></el-option>
                             </el-select>
                         </template>
                         <template v-else-if="'datePicker' === item.type">
                             <el-date-picker :type="item['dateType'] || 'date'" :placeholder="item.placeholder || '选择日期'"
                                             v-model="tableDataRequest.data[item.prop]"
                                             :value-format="item.valueFormat || 'yyyy-MM-dd'"
-                                            :disabled="item.disabled || false"></el-date-picker>
+                                            :disabled="item.disabled"></el-date-picker>
                         </template>
                         <template v-else-if="'timePicker' === item.type">
                             <el-date-picker :placeholder="item.placeholder || '选择日期'"
                                             v-model="tableDataRequest.data[item.prop]"
-                                            :disabled="item.disabled || false"></el-date-picker>
+                                            :disabled="item.disabled"></el-date-picker>
                         </template>
                         <template v-else-if="'dateTimePicker' === item.type">
                             <el-date-picker type="datetime" :placeholder="item.placeholder || '选择时间'"
                                             v-model="tableDataRequest.data[item.prop]"
                                             :value-format="item.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
-                                            :disabled="item.disabled || false"></el-date-picker>
+                                            :disabled="item.disabled"></el-date-picker>
                         </template>
                         <template v-else>
                             {{item.label}}没有指定type
@@ -55,7 +55,7 @@
                                @click="columnChangeDialog = true">字段
                     </el-button>
                     <el-button v-for="btn in tableHeaderButtons" :key="btn.name"
-                               v-if="btn['show'] || false"
+                               v-if="btn['show']"
                                :type="btn['type'] || 'primary'" size="mini"
                                :icon="btn.icon" @click="btn.handleClick(JSON.parse(JSON.stringify(selection)))"
                     >{{btn.name}}
@@ -89,12 +89,12 @@
                             v-for="column in tableShowColumns"
                             :key="column.prop"
                             :prop="column.prop"
-                            :fixed="column.fixed || false"
+                            :fixed="column.fixed"
                             :width="column.width"
                             min-width="80"
                             :class-name="column.className"
                             :sortable="column.sortable"
-                            :show-overflow-tooltip="column.showOverflowTooltip || true">
+                            :show-overflow-tooltip="allShowOverflowTooltip || column.showOverflowTooltip">
                         <template slot="header" slot-scope="scope">
                             <template v-if="null != column.label && 3 < column.label.length">
                                 <el-tooltip effect="dark" :content="column.label" placement="top">
@@ -120,15 +120,15 @@
                                              :href="column.element(scope.row)['href'] || null"
                                              :type="column.element(scope.row)['type'] || ''"
                                              :icon="column.element(scope.row)['icon'] || ''"
-                                             :underline="column.element(scope.row)['underline'] || false">
+                                             :underline="column.element(scope.row)['underline']">
                                         {{column.element(scope.row)['content'] || scope.row[column.prop]}}
                                     </el-link>
                                 </template>
                                 <template v-else-if="'switch' === column.type">
                                     <el-switch style="cursor:pointer;"
                                                @change="columnSwitchChange($event,scope)"
-                                               :value="column.element(scope.row)['value'] || false"
-                                               :disabled="column.element(scope.row)['disabled'] || false"
+                                               :value="column.element(scope.row)['value']"
+                                               :disabled="column.element(scope.row)['disabled']"
                                                :activeColor="column.element(scope.row)['activeColor'] || '#13ce66'"
                                                :inactiveColor="column.element(scope.row)['inactiveColor'] || '#ff4949'"
                                                :activeText="column.element(scope.row)['activeText'] || ''"
@@ -142,7 +142,7 @@
                                 <template v-else-if="'avatar' === column.type">
                                     <div @click="avatarClick(column.element(scope.row)['src'])">
                                         <el-image :src="column.element(scope.row)['src']"
-                                                  :lazy="column.element(scope.row)['lazy'] || true"
+                                                  :lazy="!column.element(scope.row)['notLazy']"
                                                   :alt="column.element(scope.row)['alt'] || ''"
                                                   :fit="column.element(scope.row)['fit'] || 'cover'"
                                                   :style="column.element(scope.row)['style'] || 'width:30px;height:30px'">
@@ -175,7 +175,7 @@
                             <div v-if="isShowTableOperatesPopover(tableOperates['buttons'])">
                                 <el-button v-for="btn in tableOperates.buttons" :key="btn.name"
                                            v-if="( btn['showFormatter'] && btn['showFormatter'](JSON.parse(JSON.stringify(scope.row))))
-                                       || btn['show'] || false"
+                                       || btn['show']"
                                            @click="btn.handleClick(JSON.parse(JSON.stringify(scope.row)),scope['$index'])"
                                            size="mini" :type="btn.type">{{btn.name}}
                                 </el-button>
@@ -187,7 +187,7 @@
                                     <div style="margin: 10px auto;text-align: center;"
                                          v-for="(btn, index) in tableOperates.buttons" :key="index"
                                          v-if="( btn['showFormatter'] && btn['showFormatter'](JSON.parse(JSON.stringify(scope.row))))
-                                       || btn['show'] || false">
+                                       || btn['show']">
                                         <el-button size="mini" :type="btn.type"
                                                    @click="btn.handleClick(JSON.parse(JSON.stringify(scope.row)),scope['$index'])">
                                             {{btn.name}}
@@ -316,6 +316,11 @@
             headerSearchColumn: {
                 type: String,
                 default: 'search'
+            },
+            //表格所有列当内容过长被隐藏时显示 tooltip
+            allShowOverflowTooltip: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
@@ -590,6 +595,7 @@
 <style lang="scss">
     #wei-table {
         overflow: hidden;
+
         .search {
             .el-form-item {
                 margin-bottom: 3px;
@@ -613,13 +619,20 @@
         }
 
         /*表格树形结构，箭头错位*/
-        .el-table table tbody tr td:nth-child(3) .cell.el-tooltip {
+        .el-table table tbody tr td:nth-child(3) .cell {
             display: flex;
         }
 
         /*表格树形结构，箭头错位*/
-        .el-table table tbody tr td:nth-child(2) .cell.el-tooltip {
+        .el-table table tbody tr td:nth-child(2) .cell {
             display: flex;
+        }
+
+        /*只显示一行，超出部分显示省略号*/
+        .el-table .cell {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
     }
@@ -629,9 +642,11 @@
     #wei-table {
         height: 100%;
         overflow: hidden;
+
         .header button {
             margin-bottom: 10px;
         }
+
         .pagination {
             float: right;
             margin-top: 7px;

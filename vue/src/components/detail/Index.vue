@@ -29,13 +29,13 @@
                                      :href="row.element(row)['href'] || ''"
                                      :type="row.element(row)['type'] || ''"
                                      :icon="row.element(row)['icon'] || ''"
-                                     :underline="row.element(row)['underline'] || false">
+                                     :underline="row.element(row)['underline']">
                                 {{row.element(row)['content'] || row.prop}}
                             </el-link>
                         </template>
                         <template v-else-if="'switch' === row.type">
                             <el-switch :value="row.element(row)['value'] || ''"
-                                       :disabled="row.element(row)['disabled'] || false"
+                                       :disabled="row.element(row)['disabled']"
                                        :activeColor="row.element(row)['activeColor'] || '#13ce66'"
                                        :inactiveColor="row.element(row)['inactiveColor'] || '#ff4949'"
                                        :activeText="row.element(row)['activeText'] || ''"
@@ -49,7 +49,7 @@
                         <template v-else-if="'avatar' === row.type">
                             <div @click="avatarClick(row.element(row)['src'])">
                                 <el-image :src="row.element(row)['src']"
-                                          :lazy="row.element(row)['lazy'] || true"
+                                          :lazy="!row.element(row)['notLazy']"
                                           :alt="row.element(row)['alt'] || ''"
                                           :fit="row.element(row)['fit'] || 'cover'"
                                           :style="row.element(row)['style'] || 'width:30px;height:30px'">
@@ -126,10 +126,12 @@
 <style lang="scss">
     #wei-dialog-detail {
         overflow: hidden;
+
         .el-row {
             color: #666;
             margin-bottom: 5px;
         }
+
         .label {
             font-size: 0.9rem;
             background-color: #eee;
@@ -138,6 +140,7 @@
             line-height: 35px;
             overflow: hidden;
         }
+
         .content {
             font-size: 0.8rem;
             border: 1px solid #e2e2e2;

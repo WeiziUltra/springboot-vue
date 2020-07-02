@@ -17,7 +17,7 @@
                     </el-button>
                 </div>
                 <el-divider content-position="left">ip名单</el-divider>
-                <wei-table ref="pcTable" :showHeaderSearch="true"
+                <wei-table ref="pcTable" :showHeaderSearch="true" :allShowOverflowTooltip="true"
                            :tableDataRequest="pcTableDataRequest"
                            :tableColumns="tableColumns"
                            :tableHeaderButtons="tableHeaderButtons"

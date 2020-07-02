@@ -31,8 +31,8 @@
                     data: {}
                 },
                 tableColumns: [
-                    {label: '用户名', prop: 'username', fixed: 'left'},
-                    {label: '请求路径', prop: 'url'},
+                    {label: '用户名', prop: 'username', showOverflowTooltip: true, fixed: 'left'},
+                    {label: '请求路径', prop: 'url', showOverflowTooltip: true},
                     {
                         label: '类型', type: 'tag',
                         element({type}) {
@@ -49,7 +49,7 @@
                             }
                         }
                     },
-                    {label: '参数', prop: 'param'},
+                    {label: '参数', prop: 'param', showOverflowTooltip: true},
                     {label: '操作', prop: 'description'},
                     {label: 'ip地址', prop: 'ipAddress'},
                     {label: '浏览器', prop: 'borderName'},

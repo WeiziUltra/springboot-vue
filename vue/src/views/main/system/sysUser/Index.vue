@@ -54,9 +54,9 @@
                     data: {}
                 },
                 tableColumns: [
-                    {label: '用户名', prop: 'username', fixed: 'left'},
-                    {label: '真实姓名', prop: 'realName', fixed: 'left'},
-                    {label: '角色', prop: 'roleList'},
+                    {label: '用户名', prop: 'username', showOverflowTooltip: true, fixed: 'left'},
+                    {label: '真实姓名', prop: 'realName', showOverflowTooltip: true, fixed: 'left'},
+                    {label: '角色', prop: 'roleList', showOverflowTooltip: true},
                     {label: '手机号', prop: 'phone'},
                     {
                         label: '状态', type: 'switch',
@@ -74,13 +74,14 @@
                             }
                         }
                     },
-                    {label: '用户最后活跃ip地址', prop: 'laseIpAddress'},
+                    {label: '用户最后活跃ip地址', prop: 'laseIpAddress', showOverflowTooltip: true},
                     {
                         label: '用户最后活跃时间',
                         prop: 'lastActiveTime',
                         width: 150,
                         sortable: 'custom',
                         type: 'icon',
+                        showOverflowTooltip: true,
                         element(row) {
                             return {
                                 leftIcon: 'el-icon-time',

@@ -54,7 +54,7 @@
                     data: {}
                 },
                 tableColumns: [
-                    {label: '名称', prop: 'name', fixed: 'left'},
+                    {label: '名称', prop: 'name', showOverflowTooltip: true, fixed: 'left'},
                     {
                         label: '状态', prop: 'status', type: 'switch',
                         element({status}) {
@@ -65,9 +65,9 @@
                         }
                     },
                     {label: '排序', prop: 'sort'},
-                    {label: '备注', prop: 'remark'},
+                    {label: '备注', prop: 'remark', showOverflowTooltip: true},
                     {
-                        label: '创建时间', prop: 'createTime', type: 'icon', element(row) {
+                        label: '创建时间', prop: 'createTime', showOverflowTooltip: true, type: 'icon', element(row) {
                             return {
                                 leftIcon: 'el-icon-time',
                                 content: row['createTime']
