@@ -22,9 +22,15 @@ http {
     gzip_disable "MSIE [1-6]\.";
     #让代理服务器上的浏览器和服务器能正确辨认gzip压缩功能.
     gzip_vary on;
+    #设置最小压缩文件大小
+    gzip_min_length 1k;
+    #压缩缓冲区大小
+    gzip_buffers 4 16k;
+    #压缩等级
+    gzip_comp_level 2;
     gzip_proxied any;
-    #需要压缩的MIME类型文件
-    gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript image/jpeg image/gif image/png;
+    #需要压缩的MIME类型文件(图片不建议压缩)
+    gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript;
 
     server {
         #监听80和443端口
