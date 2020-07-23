@@ -51,7 +51,9 @@ http {
 
         ###请求转发到某个端口
         location /github/ {
+            #注意后面有个/
             proxy_pass   http://127.0.0.1:8888/;
+            #配合后台获取到真实ip地址
             proxy_set_header x-forwarded-for  $remote_addr;
         }
 
