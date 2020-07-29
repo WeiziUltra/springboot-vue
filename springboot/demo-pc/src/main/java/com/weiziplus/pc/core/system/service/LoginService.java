@@ -1,6 +1,8 @@
 package com.weiziplus.pc.core.system.service;
 
 import com.weiziplus.common.base.BaseService;
+import com.weiziplus.common.base.BaseWhere;
+import com.weiziplus.common.base.BaseWhereModel;
 import com.weiziplus.common.models.SysFunction;
 import com.weiziplus.common.models.SysUser;
 import com.weiziplus.common.models.SysUserRole;
@@ -97,7 +99,9 @@ public class LoginService extends BaseService {
             RedisUtils.delete(redisKey);
             return ResultUtils.error("验证码错误");
         }
-        SysUser sysUser = baseFindOneDataByClassAndColumnAndValue(SysUser.class, SysUser.COLUMN_USERNAME, username);
+        BaseWhere<SysUser> baseWhere = new BaseWhere<>(SysUser.class)
+                .where(new BaseWhereModel(SysUser.COLUMN_USERNAME, username));
+        SysUser sysUser = baseFindOneData(baseWhere);
         if (null == sysUser || !sysUser.getPassword().equals(Md5Utils.encode(password))) {
             return ResultUtils.error("用户名或密码错误");
         }

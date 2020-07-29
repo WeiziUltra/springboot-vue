@@ -270,17 +270,17 @@ public class SysUserService extends BaseService {
         if (scale < minScale || scale > maxScale) {
             return ResultUtils.error("头像建议长宽比1:1");
         }
-        String path = FileUtils.upFile(file, "user/icon");
-        if (null == path) {
-            return ResultUtils.error("文件上传失败，请重试");
+        ResultUtils<String> stringResultUtils = FileUtils.upImage(image, "user/icon");
+        if (!ResultUtils.SUCCESS_CODE.equals(stringResultUtils.getCode())) {
+            return ResultUtils.error(stringResultUtils.getMsg());
         }
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         Integer userId = AdminTokenUtils.getUserIdByHttpServletRequest(request);
         SysUser sysUser = new SysUser()
                 .setId(userId)
-                .setIcon(path);
+                .setIcon(stringResultUtils.getData());
         baseUpdate(sysUser);
-        return ResultUtils.success(GlobalConfig.getMybatisFilePathPrefix() + path);
+        return ResultUtils.success(GlobalConfig.getMybatisFilePathPrefix() + stringResultUtils.getData());
     }
 
     /**

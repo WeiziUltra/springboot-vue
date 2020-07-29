@@ -117,6 +117,9 @@
                 </choose>
             </foreach>
         </where>
+        <if test="null != ORDER_BY and '' != ORDER_BY">
+            ORDER BY ${ORDER_BY}
+        </if>
         LIMIT 1
     </select>
     <select id="findListByColumn" resultType="Map">
@@ -162,6 +165,9 @@
                 </choose>
             </foreach>
         </where>
+        <if test="null != ORDER_BY and '' != ORDER_BY">
+            ORDER BY ${ORDER_BY}
+        </if>
     </select>
     <select id="findAll" resultType="Map">
         SELECT *

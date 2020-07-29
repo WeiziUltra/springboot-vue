@@ -1,91 +1,138 @@
 package com.weiziplus.common.base;
 
+import com.weiziplus.common.util.ToolUtils;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * sql字段与条件和值
+ * 查询条件工具
  *
  * @author wanglongwei
- * @date 2020/06/03 14/57
+ * @date 2020/07/28 16/35
  */
 @Getter
 @Accessors(chain = true)
-public class BaseWhere implements Serializable {
+public class BaseWhere<T> extends BaseService implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 数据库字段
+     * 实体类的class
      */
-    private String column;
+    private Class<T> modelClass;
 
     /**
-     * where条件
+     * 查询的条件
      */
-    private String where = "=";
+    private List<BaseWhereModel> baseWhereModels;
 
     /**
-     * 值
+     * 排序
      */
-    private Object value;
+    private String orderBy;
 
-    public BaseWhere() {
+    /**
+     * 实例化
+     */
+    private BaseWhere() {
 
     }
 
     /**
-     * 创建where
+     * 实例化
      *
-     * @param column
-     * @param where
-     * @param value
+     * @param clazz
      */
-    public BaseWhere(String column, String where, Object value) {
-        this.column = column;
-        this.where = where;
-        this.value = value;
+    public BaseWhere(Class<T> clazz) {
+        this.modelClass = clazz;
     }
 
-    @Getter
-    public enum Where {
-        /**
-         * sql条件
-         */
-        EQUAL("等于", "="),
-        NOT_EQUAL("不等于", "<>"),
-        MORE_THAN("大于", ">"),
-        LESS_THAN("小于", "<"),
-        MORE_THAN_EQUAL("大于等于", ">="),
-        LESS_THAN_EQUAL("小于等于", "<="),
-        IN("IN", "IN"),
-        NOT_IN("NOT_IN", "NOT IN"),
-        POSITION("POSITION", "POSITION");
-
-        private String name;
-        private String value;
-
-        Where(String name, String value) {
-            this.name = name;
-            this.value = value;
+    /**
+     * 添加查询条件
+     *
+     * @param baseWhereModel
+     * @return
+     */
+    public BaseWhere<T> where(BaseWhereModel baseWhereModel) {
+        List<BaseWhereModel> oldList = this.getBaseWhereModels();
+        if (null == oldList) {
+            oldList = new ArrayList<>(ToolUtils.initialCapacity(1));
         }
+        oldList.add(baseWhereModel);
+        this.baseWhereModels = oldList;
+        return this;
+    }
 
-        /**
-         * 是否存在
-         *
-         * @param value
-         * @return
-         */
-        public static boolean contains(String value) {
-            for (Where where : Where.values()) {
-                if (where.getValue().equals(value)) {
-                    return true;
-                }
+    /**
+     * 添加查询条件数组
+     *
+     * @param baseWhereModelList
+     * @return
+     */
+    public BaseWhere<T> where(List<BaseWhereModel> baseWhereModelList) {
+        List<BaseWhereModel> oldList = this.getBaseWhereModels();
+        if (null == oldList) {
+            oldList = new ArrayList<>(ToolUtils.initialCapacity(1));
+        }
+        oldList.addAll(baseWhereModelList);
+        this.baseWhereModels = oldList;
+        return this;
+    }
+
+    /**
+     * 倒叙
+     *
+     * @param columns
+     * @return
+     */
+    public BaseWhere<T> descOrderBy(String... columns) {
+        if (null == columns || 0 >= columns.length) {
+            return this;
+        }
+        String oldOrderBy = this.getOrderBy();
+        if (null == oldOrderBy) {
+            oldOrderBy = "";
+        }
+        StringBuilder orderBy = new StringBuilder(oldOrderBy);
+        for (String column : columns) {
+            //判断实体类是否包含该字段
+            if (!classIsContainsColumn(this.modelClass, column)) {
+                throw new RuntimeException("当前实体类" + this.modelClass + "找不到该字段" + column + ";请使用实体类的静态常量");
             }
-            return false;
+            orderBy.append(column).append(" DESC, ");
         }
+        this.orderBy = orderBy.toString();
+        return this;
+    }
+
+    /**
+     * 正序
+     *
+     * @param columns
+     * @return
+     */
+    public BaseWhere<T> ascOrderBy(String... columns) {
+        if (null == columns || 0 >= columns.length) {
+            return this;
+        }
+        String oldOrderBy = this.getOrderBy();
+        if (null == oldOrderBy) {
+            oldOrderBy = "";
+        }
+        StringBuilder orderBy = new StringBuilder(oldOrderBy);
+        for (String column : columns) {
+            //判断实体类是否包含该字段
+            if (!classIsContainsColumn(this.modelClass, column)) {
+                throw new RuntimeException("当前实体类" + this.modelClass + "找不到该字段" + column + ";请使用实体类的静态常量");
+            }
+            orderBy.append(column).append(" ASC, ");
+        }
+        this.orderBy = orderBy.toString();
+        return this;
     }
 
 }

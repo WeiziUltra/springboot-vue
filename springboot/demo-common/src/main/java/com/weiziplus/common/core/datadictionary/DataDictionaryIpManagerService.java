@@ -3,6 +3,8 @@ package com.weiziplus.common.core.datadictionary;
 import com.github.pagehelper.PageHelper;
 import com.weiziplus.common.base.BaseService;
 import com.weiziplus.common.base.BaseWhere;
+import com.weiziplus.common.base.BaseWhereEnum;
+import com.weiziplus.common.base.BaseWhereModel;
 import com.weiziplus.common.models.DataDictionary;
 import com.weiziplus.common.models.DataDictionaryValue;
 import com.weiziplus.common.util.DateUtils;
@@ -220,17 +222,15 @@ public class DataDictionaryIpManagerService extends BaseService {
         if (ToolUtils.isBlank(ipAddress)) {
             return;
         }
+        BaseWhere<DataDictionaryValue> baseWhere = new BaseWhere<>(DataDictionaryValue.class)
+                .where(new BaseWhereModel(DataDictionaryValue.COLUMN_VALUE, ipAddress))
+                .where(new BaseWhereModel(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhereEnum.IN, Arrays.asList(
+                        DataDictionary.Code.PC_IP_FILTER_WHITE_LIST.getValue(),
+                        DataDictionary.Code.PC_IP_FILTER_BLACK_LIST.getValue(),
+                        DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue()
+                )));
         //根据ip获取一条pc端的数据
-        DataDictionaryValue dictionaryValue = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
-            add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
-            add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
-                    new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
-                        add(DataDictionary.Code.PC_IP_FILTER_WHITE_LIST.getValue());
-                        add(DataDictionary.Code.PC_IP_FILTER_BLACK_LIST.getValue());
-                        add(DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue());
-                    }})
-            );
-        }});
+        DataDictionaryValue dictionaryValue = baseFindOneData(baseWhere);
         if (null == dictionaryValue) {
             dictionaryValue = new DataDictionaryValue()
                     .setDictionaryCode(DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue())
@@ -261,17 +261,15 @@ public class DataDictionaryIpManagerService extends BaseService {
         if (ToolUtils.isBlank(ipAddress)) {
             return;
         }
+        BaseWhere<DataDictionaryValue> baseWhere = new BaseWhere<>(DataDictionaryValue.class)
+                .where(new BaseWhereModel(DataDictionaryValue.COLUMN_VALUE, ipAddress))
+                .where(new BaseWhereModel(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhereEnum.IN, Arrays.asList(
+                        DataDictionary.Code.WEB_IP_FILTER_WHITE_LIST.getValue(),
+                        DataDictionary.Code.WEB_IP_FILTER_BLACK_LIST.getValue(),
+                        DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue()
+                )));
         //根据ip获取一条web端的数据
-        DataDictionaryValue dictionaryValue = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
-            add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
-            add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
-                    new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
-                        add(DataDictionary.Code.WEB_IP_FILTER_WHITE_LIST.getValue());
-                        add(DataDictionary.Code.WEB_IP_FILTER_BLACK_LIST.getValue());
-                        add(DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue());
-                    }})
-            );
-        }});
+        DataDictionaryValue dictionaryValue = baseFindOneData(baseWhere);
         if (null == dictionaryValue) {
             dictionaryValue = new DataDictionaryValue()
                     .setDictionaryCode(DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue())
@@ -439,17 +437,15 @@ public class DataDictionaryIpManagerService extends BaseService {
                         && !DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue().equals(type)) {
                     return ResultUtils.error("类型错误");
                 }
+                BaseWhere<DataDictionaryValue> baseWhere = new BaseWhere<>(DataDictionaryValue.class)
+                        .where(new BaseWhereModel(DataDictionaryValue.COLUMN_VALUE, ipAddress))
+                        .where(new BaseWhereModel(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhereEnum.IN, Arrays.asList(
+                                DataDictionary.Code.PC_IP_FILTER_WHITE_LIST.getValue(),
+                                DataDictionary.Code.PC_IP_FILTER_BLACK_LIST.getValue(),
+                                DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue()
+                        )));
                 //根据ip地址获取pc名单中的一条数据
-                DataDictionaryValue onePcIpInfoByAddress = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
-                    add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
-                    add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
-                            new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
-                                add(DataDictionary.Code.PC_IP_FILTER_WHITE_LIST.getValue());
-                                add(DataDictionary.Code.PC_IP_FILTER_BLACK_LIST.getValue());
-                                add(DataDictionary.Code.PC_IP_FILTER_ABNORMAL_LIST.getValue());
-                            }})
-                    );
-                }});
+                DataDictionaryValue onePcIpInfoByAddress = baseFindOneData(baseWhere);
                 if (null != onePcIpInfoByAddress) {
                     return ResultUtils.error("该ip地址已存在,code:" + onePcIpInfoByAddress.getDictionaryCode());
                 }
@@ -461,17 +457,15 @@ public class DataDictionaryIpManagerService extends BaseService {
                         && !DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue().equals(type)) {
                     return ResultUtils.error("类型错误");
                 }
+                BaseWhere<DataDictionaryValue> baseWhere = new BaseWhere<>(DataDictionaryValue.class)
+                        .where(new BaseWhereModel(DataDictionaryValue.COLUMN_VALUE, ipAddress))
+                        .where(new BaseWhereModel(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhereEnum.IN, Arrays.asList(
+                                DataDictionary.Code.WEB_IP_FILTER_WHITE_LIST.getValue(),
+                                DataDictionary.Code.WEB_IP_FILTER_BLACK_LIST.getValue(),
+                                DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue()
+                        )));
                 //根据ip地址获取web名单中的一条数据
-                DataDictionaryValue oneWebIpInfoByAddress = baseFindOneDataByClassAndBaseWhereList(DataDictionaryValue.class, new ArrayList<BaseWhere>() {{
-                    add(new BaseWhere(DataDictionaryValue.COLUMN_VALUE, BaseWhere.Where.EQUAL.getValue(), ipAddress));
-                    add(new BaseWhere(DataDictionaryValue.COLUMN_DICTIONARY_CODE, BaseWhere.Where.IN.getValue(),
-                            new ArrayList<String>(ToolUtils.initialCapacity(3)) {{
-                                add(DataDictionary.Code.WEB_IP_FILTER_WHITE_LIST.getValue());
-                                add(DataDictionary.Code.WEB_IP_FILTER_BLACK_LIST.getValue());
-                                add(DataDictionary.Code.WEB_IP_FILTER_ABNORMAL_LIST.getValue());
-                            }})
-                    );
-                }});
+                DataDictionaryValue oneWebIpInfoByAddress = baseFindOneData(baseWhere);
                 if (null != oneWebIpInfoByAddress) {
                     return ResultUtils.error("该ip地址已存在,code:" + oneWebIpInfoByAddress.getDictionaryCode());
                 }

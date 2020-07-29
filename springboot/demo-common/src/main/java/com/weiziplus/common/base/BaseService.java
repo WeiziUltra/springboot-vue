@@ -233,7 +233,7 @@ public class BaseService {
      * @param list
      * @return
      */
-    private <T> Map<String, Object> handleTableListInsert(List<T> list) {
+    private Map<String, Object> handleTableListInsert(List<?> list) {
         Map<String, Object> result = new HashMap<>(ToolUtils.initialCapacity(3));
         result.put("TABLE_NAME", getTableName(list.get(0)));
 
@@ -382,7 +382,7 @@ public class BaseService {
      * @param list
      * @return
      */
-    protected <T> int baseInsertList(List<T> list) {
+    protected int baseInsertList(List<?> list) {
         if (null == list || 0 >= list.size()) {
             return 0;
         }
@@ -458,7 +458,7 @@ public class BaseService {
      * @param ids
      * @return
      */
-    protected <T> int baseDeleteByClassAndIds(Class nowClass, List<T> ids) {
+    protected int baseDeleteByClassAndIds(Class nowClass, List<?> ids) {
         if (null == nowClass || null == ids || 0 >= ids.size()) {
             return 0;
         }
@@ -600,13 +600,13 @@ public class BaseService {
     }
 
     /**
-     * 根据id查询
+     * 根据ids查询
      *
      * @param clazz
      * @param ids
      * @return
      */
-    protected <T> List<T> baseFindByClassAndIds(Class<T> clazz, List<Object> ids) {
+    protected <T> List<T> baseFindByClassAndIds(Class<T> clazz, List<?> ids) {
         if (null == clazz || null == ids || 0 >= ids.size()) {
             return null;
         }
@@ -627,7 +627,7 @@ public class BaseService {
      * @param column
      * @return
      */
-    private boolean classIsContainsColumn(Class clazz, String column) {
+    protected boolean classIsContainsColumn(Class clazz, String column) {
         if (null == clazz || null == column) {
             throw new RuntimeException("判断实体类是否包含某个字段出错，column不能为空==========");
         }
@@ -656,6 +656,100 @@ public class BaseService {
     }
 
     /**
+     * 查询一条数据
+     *
+     * @param baseWhere
+     * @param <T>
+     * @return
+     */
+    protected <T> T baseFindOneData(BaseWhere<T> baseWhere) {
+        if (null == baseWhere) {
+            throw new RuntimeException("BaseService--baseFindOneData---BaseWhere为空");
+        }
+        Class<T> modelClass = baseWhere.getModelClass();
+        String tableName = getTableName(modelClass);
+        if (null == baseWhere.getBaseWhereModels()
+                || 0 >= baseWhere.getBaseWhereModels().size()) {
+            throw new RuntimeException("BaseService--baseFindOneData---查询条件不能为空");
+        }
+        List<BaseWhereModel> baseWhereModelList = baseWhere.getBaseWhereModels();
+        List<Map<String, Object>> whereList = new ArrayList<>(ToolUtils.initialCapacity(baseWhereModelList.size()));
+        for (BaseWhereModel baseWhereModel : baseWhereModelList) {
+            //判断实体类是否包含该字段
+            if (!classIsContainsColumn(modelClass, baseWhereModel.getColumn())) {
+                throw new RuntimeException("当前实体类" + modelClass + "找不到该字段" + baseWhereModel.getColumn() + ";请使用实体类的静态常量");
+            }
+            whereList.add(new HashMap<String, Object>(ToolUtils.initialCapacity(3)) {{
+                put("COLUMN", baseWhereModel.getColumn());
+                put("WHERE", baseWhereModel.getWhere().getValue());
+                put("VALUE", baseWhereModel.getValue());
+            }});
+        }
+        String orderBy = baseWhere.getOrderBy();
+        if (null != orderBy && 0 < orderBy.trim().length()) {
+            //如果有排序条件，去掉最后一个 ,
+            orderBy = orderBy.substring(0, orderBy.lastIndexOf(","));
+        }
+        String finalOrderBy = orderBy;
+        Map<String, Object> byId = mapper.findOneDataByTableNameAndBaseWhereList(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
+            put("TABLE_NAME", tableName);
+            put("BASE_WHERE_LIST", whereList);
+            put("ORDER_BY", finalOrderBy);
+        }});
+        if (null == byId) {
+            return null;
+        }
+        return JSON.parseObject(JSON.toJSONString(byId, SerializerFeature.WriteDateUseDateFormat), modelClass);
+    }
+
+    /**
+     * 查询列表
+     *
+     * @param baseWhere
+     * @param <T>
+     * @return
+     */
+    protected <T> List<T> baseFindList(BaseWhere<T> baseWhere) {
+        if (null == baseWhere) {
+            throw new RuntimeException("BaseService--baseFindOneData---BaseWhere为空");
+        }
+        Class<T> modelClass = baseWhere.getModelClass();
+        String tableName = getTableName(modelClass);
+        if (null == baseWhere.getBaseWhereModels()
+                || 0 >= baseWhere.getBaseWhereModels().size()) {
+            throw new RuntimeException("BaseService--baseFindOneData---查询条件不能为空");
+        }
+        List<BaseWhereModel> baseWhereModelList = baseWhere.getBaseWhereModels();
+        List<Map<String, Object>> whereList = new ArrayList<>(ToolUtils.initialCapacity(baseWhereModelList.size()));
+        for (BaseWhereModel baseWhereModel : baseWhereModelList) {
+            //判断实体类是否包含该字段
+            if (!classIsContainsColumn(modelClass, baseWhereModel.getColumn())) {
+                throw new RuntimeException("当前实体类" + modelClass + "找不到该字段" + baseWhereModel.getColumn() + ";请使用实体类的静态常量");
+            }
+            whereList.add(new HashMap<String, Object>(ToolUtils.initialCapacity(3)) {{
+                put("COLUMN", baseWhereModel.getColumn());
+                put("WHERE", baseWhereModel.getWhere().getValue());
+                put("VALUE", baseWhereModel.getValue());
+            }});
+        }
+        String orderBy = baseWhere.getOrderBy();
+        if (null != orderBy && 0 < orderBy.trim().length()) {
+            //如果有排序条件，去掉最后一个 ,
+            orderBy = orderBy.substring(0, orderBy.lastIndexOf(","));
+        }
+        String finalOrderBy = orderBy;
+        List<Map<String, Object>> byIds = mapper.findListByTableNameAndBaseWhereList(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
+            put("TABLE_NAME", tableName);
+            put("BASE_WHERE_LIST", whereList);
+            put("ORDER_BY", finalOrderBy);
+        }});
+        if (null == byIds) {
+            return null;
+        }
+        return JSONArray.parseArray(JSON.toJSONString(byIds, SerializerFeature.WriteDateUseDateFormat), modelClass);
+    }
+
+    /**
      * 根据实体类和字段和值获取一条数据
      *
      * @param clazz
@@ -677,75 +771,6 @@ public class BaseService {
             put("TABLE_NAME", tableName);
             put("COLUMN", column);
             put("value", object);
-        }});
-        if (null == byId) {
-            return null;
-        }
-        return JSON.parseObject(JSON.toJSONString(byId, SerializerFeature.WriteDateUseDateFormat), clazz);
-    }
-
-    /**
-     * 根据实体类和字段和值的map获取一条数据
-     *
-     * @param clazz
-     * @param map
-     * @param <T>
-     * @return
-     */
-    protected <T> T baseFindOneDataByClassAndColumnAndValueMap(Class<T> clazz, Map<String, Object> map) {
-        if (null == clazz || null == map || 0 >= map.size()) {
-            return null;
-        }
-        String tableName = getTableName(clazz);
-        //判断实体类是否包含字段
-        for (String key : map.keySet()) {
-            if (!classIsContainsColumn(clazz, key)) {
-                throw new RuntimeException("当前实体类" + clazz + "找不到该字段" + key + ";请使用实体类的静态常量");
-            }
-        }
-        Map<String, Object> byId = mapper.findOneDataByColumnMap(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
-            put("TABLE_NAME", tableName);
-            put("COLUMN_VALUE_MAP", map);
-        }});
-        if (null == byId) {
-            return null;
-        }
-        return JSON.parseObject(JSON.toJSONString(byId, SerializerFeature.WriteDateUseDateFormat), clazz);
-    }
-
-    /**
-     * 根据实体类和baseWhere列表获取一条数据
-     *
-     * @param clazz
-     * @param baseWhereList 如果条件是IN/NOT IN,baseWhere.value需要是一个数组
-     * @param <T>
-     * @return
-     */
-    protected <T> T baseFindOneDataByClassAndBaseWhereList(Class<T> clazz, List<BaseWhere> baseWhereList) {
-        if (null == clazz || null == baseWhereList || 0 >= baseWhereList.size()) {
-            return null;
-        }
-        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.getValue().equals(baseWhereList.get(0).getWhere())) {
-            log.debug("如果baseWhere数组只有一个的话推荐使用baseFindOneDataByClassAndColumnAndValue");
-        }
-        String tableName = getTableName(clazz);
-        List<Map<String, Object>> whereList = new ArrayList<>(ToolUtils.initialCapacity(baseWhereList.size()));
-        for (BaseWhere baseWhere : baseWhereList) {
-            if (!classIsContainsColumn(clazz, baseWhere.getColumn())) {
-                throw new RuntimeException("当前实体类" + clazz + "找不到该字段" + baseWhere.getColumn() + ";请使用实体类的静态常量");
-            }
-            if (!BaseWhere.Where.contains(baseWhere.getWhere())) {
-                throw new RuntimeException("根据实体类和baseWhere列表获取数据where条件错误;请使用BaseWhere中Where枚举，如有需要，您可以添加枚举");
-            }
-            whereList.add(new HashMap<String, Object>(ToolUtils.initialCapacity(3)) {{
-                put("COLUMN", baseWhere.getColumn());
-                put("WHERE", baseWhere.getWhere());
-                put("VALUE", baseWhere.getValue());
-            }});
-        }
-        Map<String, Object> byId = mapper.findOneDataByTableNameAndBaseWhereList(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
-            put("TABLE_NAME", tableName);
-            put("BASE_WHERE_LIST", whereList);
         }});
         if (null == byId) {
             return null;
@@ -783,75 +808,6 @@ public class BaseService {
     }
 
     /**
-     * 根据实体类和字段和值map获取列表
-     *
-     * @param clazz
-     * @param map
-     * @param <T>
-     * @return
-     */
-    protected <T> List<T> baseFindListByClassAndColumnAndValueMap(Class<T> clazz, Map<String, Object> map) {
-        if (null == clazz || null == map || 0 >= map.size()) {
-            return null;
-        }
-        String tableName = getTableName(clazz);
-        //判断实体类是否包含字段
-        for (String key : map.keySet()) {
-            if (!classIsContainsColumn(clazz, key)) {
-                throw new RuntimeException("当前实体类" + clazz + "找不到该字段" + key + ";请使用实体类的静态常量");
-            }
-        }
-        List<Map<String, Object>> listByColumnMap = mapper.findListByColumnMap(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
-            put("TABLE_NAME", tableName);
-            put("COLUMN_VALUE_MAP", map);
-        }});
-        if (null == listByColumnMap) {
-            return null;
-        }
-        return JSONArray.parseArray(JSON.toJSONString(listByColumnMap, SerializerFeature.WriteDateUseDateFormat), clazz);
-    }
-
-    /**
-     * 根据实体类和baseWhere列表获取一条数据
-     *
-     * @param clazz
-     * @param baseWhereList 如果条件是IN/NOT IN,baseWhere.value需要是一个数组
-     * @param <T>
-     * @return
-     */
-    protected <T> List<T> baseFindListByClassAndBaseWhereList(Class<T> clazz, List<BaseWhere> baseWhereList) {
-        if (null == clazz || null == baseWhereList || 0 >= baseWhereList.size()) {
-            return null;
-        }
-        if (1 == baseWhereList.size() && BaseWhere.Where.EQUAL.getValue().equals(baseWhereList.get(0).getWhere())) {
-            log.debug("如果baseWhere数组只有一个的话推荐使用baseFindOneDataByClassAndColumnAndValue");
-        }
-        String tableName = getTableName(clazz);
-        List<Map<String, Object>> whereList = new ArrayList<>(ToolUtils.initialCapacity(baseWhereList.size()));
-        for (BaseWhere baseWhere : baseWhereList) {
-            if (!classIsContainsColumn(clazz, baseWhere.getColumn())) {
-                throw new RuntimeException("当前实体类" + clazz + "找不到该字段" + baseWhere.getColumn() + ";请使用实体类的静态常量");
-            }
-            if (!BaseWhere.Where.contains(baseWhere.getWhere())) {
-                throw new RuntimeException("根据实体类和baseWhere列表获取数据where条件错误;请使用BaseWhere中Where枚举，如有需要，您可以添加枚举");
-            }
-            whereList.add(new HashMap<String, Object>(ToolUtils.initialCapacity(3)) {{
-                put("COLUMN", baseWhere.getColumn());
-                put("WHERE", baseWhere.getWhere());
-                put("VALUE", baseWhere.getValue());
-            }});
-        }
-        List<Map<String, Object>> byIds = mapper.findListByTableNameAndBaseWhereList(new HashMap<String, Object>(ToolUtils.initialCapacity(2)) {{
-            put("TABLE_NAME", tableName);
-            put("BASE_WHERE_LIST", whereList);
-        }});
-        if (null == byIds) {
-            return null;
-        }
-        return JSONArray.parseArray(JSON.toJSONString(byIds, SerializerFeature.WriteDateUseDateFormat), clazz);
-    }
-
-    /**
      * 获取所有数据
      *
      * @param clazz
@@ -863,28 +819,6 @@ public class BaseService {
             return null;
         }
         return JSONObject.parseArray(JSON.toJSONString(all, SerializerFeature.WriteDateUseDateFormat), clazz);
-    }
-
-    /**
-     * 获取所有数据按照某个字段降序排列
-     *
-     * @param clazz
-     * @return
-     */
-    protected <T> List<T> baseFindAllByClassOrderByColumnDesc(Class<T> clazz, String column) {
-        String tableName = getTableName(clazz);
-        //判断实体类是否包含该字段
-        if (!classIsContainsColumn(clazz, column)) {
-            return null;
-        }
-        List<Map<String, Object>> allOrderByColumnDesc = mapper.findAllOrderByColumnDesc(new HashMap<String, String>(ToolUtils.initialCapacity(2)) {{
-            put("TABLE_NAME", tableName);
-            put("COLUMN", column);
-        }});
-        if (null == allOrderByColumnDesc) {
-            return null;
-        }
-        return JSONObject.parseArray(JSON.toJSONString(allOrderByColumnDesc, SerializerFeature.WriteDateUseDateFormat), clazz);
     }
 
     /**

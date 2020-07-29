@@ -4,6 +4,8 @@ import com.alibaba.excel.EasyExcel;
 import com.github.pagehelper.PageHelper;
 import com.weiziplus.common.base.BaseService;
 import com.weiziplus.common.base.BaseWhere;
+import com.weiziplus.common.base.BaseWhereEnum;
+import com.weiziplus.common.base.BaseWhereModel;
 import com.weiziplus.common.models.SysUserLog;
 import com.weiziplus.common.util.HttpRequestUtils;
 import com.weiziplus.common.util.PageUtils;
@@ -84,10 +86,12 @@ public class SysUserLogService extends BaseService {
                     response, ResultUtils.errorRole("只有超级管理员才可以导出系统日志"), "非超级管理员导出系统用户日志");
             return;
         }
-        List<SysUserLog> sysUserLogList = baseFindListByClassAndBaseWhereList(SysUserLog.class, new ArrayList<BaseWhere>(ToolUtils.initialCapacity(2)) {{
-            add(new BaseWhere(SysUserLog.COLUMN_CREATE_TIME, BaseWhere.Where.MORE_THAN.getValue(), startTime));
-            add(new BaseWhere(SysUserLog.COLUMN_CREATE_TIME, BaseWhere.Where.LESS_THAN_EQUAL.getValue(), endTime));
-        }});
+        BaseWhere<SysUserLog> baseWhere = new BaseWhere<>(SysUserLog.class)
+                .where(new ArrayList<BaseWhereModel>(ToolUtils.initialCapacity(2)) {{
+                    add(new BaseWhereModel(SysUserLog.COLUMN_CREATE_TIME, BaseWhereEnum.MORE_THAN, startTime));
+                    add(new BaseWhereModel(SysUserLog.COLUMN_CREATE_TIME, BaseWhereEnum.LESS_THAN_EQUAL, endTime));
+                }});
+        List<SysUserLog> sysUserLogList = baseFindList(baseWhere);
         try {
             //该方法不需要关闭流
             EasyExcel.write(response.getOutputStream(), SysUserLogExcelModel.class)
