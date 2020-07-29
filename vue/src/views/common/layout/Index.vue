@@ -8,6 +8,9 @@
             <right-nav :menuCollapse="menuCollapse" @collapseChange="collapseChange"></right-nav>
             <div id="mainApp">
                 <router-view/>
+                <div class="my-backtop">
+                    <el-backtop target="#mainApp" :visibility-height="100"></el-backtop>
+                </div>
             </div>
             <div class="footer">
                 <span>Copyright ©{{nowYear}}</span>
@@ -85,6 +88,12 @@
                     right: 1%;
                     bottom: 1%;
                     left: 1%;
+                }
+
+                .my-backtop .el-backtop {
+                    position: fixed;
+                    border: 1px solid;
+                    margin-bottom: 30px;
                 }
             }
             .footer {
